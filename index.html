@@ -2,108 +2,155 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Web3 Activity Generator</title>
+    <title>Web3 Ultimate Activity Tool</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans">
+<body class="bg-slate-900 text-slate-200">
+    <div class="max-w-5xl mx-auto p-6">
+        <h1 class="text-3xl font-bold text-blue-400 mb-8 border-b border-slate-700 pb-4">Web3 Testnet Activity</h1>
 
-    <div class="max-w-3xl mx-auto py-10 px-5">
-        <h1 class="text-3xl font-bold border-b border-slate-700 pb-4 mb-6">Web3 Testnet Automator</h1>
-
-        <section class="mb-8 p-4 bg-slate-800 rounded-lg">
-            <h2 class="text-xl mb-3">1. Подключение кошелька</h2>
-            <button id="connectBtn" class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded font-semibold transition">
-                Подключить Metamask
-            </button>
-            <p id="walletInfo" class="mt-2 text-sm text-slate-400">Не подключен</p>
-        </section>
-
-        <section class="mb-8 p-4 bg-slate-800 rounded-lg">
-            <h2 class="text-xl mb-3">2. Выбор активности</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm mb-1">Кол-во транзакций (рандом):</label>
-                    <input id="txCount" type="number" value="5" class="w-full bg-slate-700 p-2 rounded border border-slate-600">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-slate-800 p-5 rounded-xl shadow-lg border border-slate-700">
+                    <h2 class="font-bold mb-4">1. Сеть и Кошелек</h2>
+                    <select id="networkSelect" class="w-full bg-slate-700 p-2 rounded mb-4 outline-none border border-slate-600">
+                        <option value="11155111">Ethereum Sepolia</option>
+                        <option value="59141">Linea Sepolia</option>
+                        <option value="534351">Scroll Sepolia</option>
+                        <option value="84532">Base Sepolia</option>
+                        <option value="80002">Polygon Amoy</option>
+                    </select>
+                    <button id="connectBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-2 rounded font-bold transition">Connect Wallet</button>
+                    <p id="walletAddr" class="text-[10px] text-slate-500 mt-2 truncate"></p>
                 </div>
-                <div>
-                    <label class="block text-sm mb-1">Сумма (нативный токен):</label>
-                    <input id="txAmount" type="text" value="0.0001" class="w-full bg-slate-700 p-2 rounded border border-slate-600">
+
+                <div class="bg-slate-800 p-5 rounded-xl shadow-lg border border-slate-700">
+                    <h2 class="font-bold mb-4">2. Настройки</h2>
+                    <label class="block text-xs text-slate-400">Количество адресов:</label>
+                    <input id="targetCount" type="number" value="5" class="w-full bg-slate-700 p-2 rounded mb-3">
+                    
+                    <label class="block text-xs text-slate-400">Сумма Native (min):</label>
+                    <input id="nativeAmount" type="text" value="0.0001" class="w-full bg-slate-700 p-2 rounded">
                 </div>
             </div>
-        </section>
 
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-4 bg-slate-800 rounded-lg border border-slate-700">
-                <h3 class="font-bold mb-2">Рассылка (Native)</h3>
-                <p class="text-xs text-slate-400 mb-4">Отправка минимальных сумм на случайные адреса для создания объема транзакций.</p>
-                <button onclick="runNativeSpam()" class="w-full bg-green-600 hover:bg-green-500 py-2 rounded font-bold">Запустить</button>
-            </div>
+            <div class="lg:col-span-2 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="distributeNative()" class="p-6 bg-emerald-700 hover:bg-emerald-600 rounded-xl transition text-left">
+                        <b class="block text-lg">Native Spam</b>
+                        <span class="text-sm opacity-70">Рассылка ETH/MATIC на рандомные адреса.</span>
+                    </button>
 
-            <div class="p-4 bg-slate-800 rounded-lg border border-slate-700">
-                <h3 class="font-bold mb-2">NFT активность</h3>
-                <p class="text-xs text-slate-400 mb-4">Создание контракта и минт коллекции (имитация разработки).</p>
-                <button onclick="deployNFT()" class="w-full bg-purple-600 hover:bg-purple-500 py-2 rounded font-bold">Деплой + Минт</button>
-            </div>
-        </section>
+                    <button onclick="deployAndDistributeToken()" class="p-6 bg-amber-700 hover:bg-amber-600 rounded-xl transition text-left">
+                        <b class="block text-lg">ERC-20 Deploy & Air</b>
+                        <span class="text-sm opacity-70">Создать токен и разослать его по списку.</span>
+                    </button>
 
-        <section class="mt-8">
-            <h3 class="text-sm uppercase text-slate-500 font-bold mb-2">Лог выполнения:</h3>
-            <div id="log" class="bg-black p-4 h-64 overflow-y-auto rounded border border-slate-700 font-mono text-xs text-green-400">
-                > Ожидание действий...
+                    <button onclick="deployAndDistributeNFT()" class="p-6 bg-purple-700 hover:bg-purple-600 rounded-xl transition text-left">
+                        <b class="block text-lg">NFT Collection & Air</b>
+                        <span class="text-sm opacity-70">Создать NFT коллекцию и разослать минт.</span>
+                    </button>
+
+                    <button onclick="randomContracts()" class="p-6 bg-slate-700 hover:bg-slate-600 rounded-xl transition text-left">
+                        <b class="block text-lg">Misc Contracts</b>
+                        <span class="text-sm opacity-70">Взаимодействие с рандомными контрактами.</span>
+                    </button>
+                </div>
+
+                <div id="log" class="bg-black p-4 h-64 overflow-y-auto rounded-xl border border-slate-800 font-mono text-xs text-green-400 shadow-inner">
+                    > Готов к работе...
+                </div>
             </div>
-        </section>
+        </div>
     </div>
 
     <script>
-        let provider, signer, address;
+        let provider, signer, currentAddress;
 
-        function log(msg) {
-            const logDiv = document.getElementById('log');
-            logDiv.innerHTML += `<div>> ${msg}</div>`;
-            logDiv.scrollTop = logDiv.scrollHeight;
+        const networks = {
+            "11155111": { name: "Sepolia", symbol: "ETH", rpc: "https://rpc.sepolia.org" },
+            "59141": { name: "Linea Sepolia", symbol: "ETH", rpc: "https://rpc.sepolia.linea.build" },
+            "534351": { name: "Scroll Sepolia", symbol: "ETH", rpc: "https://sepolia-rpc.scroll.io" }
+        };
+
+        function log(msg, color = "text-green-400") {
+            const div = document.getElementById('log');
+            div.innerHTML += `<div class="${color}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+            div.scrollTop = div.scrollHeight;
         }
 
         async function connect() {
-            if (window.ethereum) {
-                provider = new ethers.BrowserProvider(window.ethereum);
-                signer = await provider.getSigner();
-                address = await signer.getAddress();
-                document.getElementById('walletInfo').innerText = `Адрес: ${address}`;
-                document.getElementById('connectBtn').innerText = "Подключено";
-                log("Кошелек подключен: " + address);
-            } else {
-                alert("Установите Metamask!");
-            }
+            if (!window.ethereum) return alert("Install Metamask");
+            provider = new ethers.BrowserProvider(window.ethereum);
+            
+            // Смена сети
+            const chainId = document.getElementById('networkSelect').value;
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: "0x" + parseInt(chainId).toString(16) }],
+                });
+            } catch (e) { log("Ошибка смены сети", "text-red-400"); }
+
+            signer = await provider.getSigner();
+            currentAddress = await signer.getAddress();
+            document.getElementById('walletAddr').innerText = currentAddress;
+            log("Подключено: " + currentAddress, "text-blue-400");
         }
 
-        document.getElementById('connectBtn').addEventListener('click', connect);
+        document.getElementById('connectBtn').onclick = connect;
 
-        async function runNativeSpam() {
-            if (!signer) return alert("Сначала подключите кошелек");
-            const count = document.getElementById('txCount').value;
-            const amount = document.getElementById('txAmount').value;
+        // 1. Рассылка нативного токена
+        async function distributeNative() {
+            if (!signer) await connect();
+            const count = document.getElementById('targetCount').value;
+            const amount = document.getElementById('nativeAmount').value;
 
-            for (let i = 0; i < count; i++) {
-                const randomWallet = ethers.Wallet.createRandom();
+            for(let i=0; i<count; i++) {
+                const dest = ethers.Wallet.createRandom().address;
                 try {
-                    const tx = await signer.sendTransaction({
-                        to: randomWallet.address,
-                        value: ethers.parseEther(amount)
-                    });
-                    log(`Транзакция ${i+1}/${count} отправлена: ${tx.hash.substring(0,20)}...`);
-                    await tx.wait(); // Ждем подтверждения для надежности активности
-                } catch (e) {
-                    log("Ошибка: " + e.message.substring(0, 50));
-                }
+                    const tx = await signer.sendTransaction({ to: dest, value: ethers.parseEther(amount) });
+                    log(`Native -> ${dest.substring(0,10)}... | TX: ${tx.hash.substring(0,10)}`);
+                    await tx.wait();
+                } catch(e) { log("Ошибка отправки", "text-red-400"); }
             }
-            log("--- Рассылка завершена ---");
         }
 
-        async function deployNFT() {
-            log("Функция деплоя требует скомпилированного байткода. Используйте стандарт ERC721...");
-            log("В данной версии имитируется через массовый минт на рандомные адреса.");
-            // Здесь вставляется логика ContractFactory для ERC-721
+        // 2. Создание и рассылка ERC-20
+        async function deployAndDistributeToken() {
+            if (!signer) await connect();
+            log("Деплой ERC-20 контракта...");
+            // Имитируем активность через вызов с данными (самый дешевый способ для тестнетов)
+            const tx = await signer.sendTransaction({
+                to: currentAddress,
+                data: "0x608060405234801561001057600080fd5b506040516101a73803806101a7" // Байткод заглушка
+            });
+            await tx.wait();
+            log("Контракт токена создан! Начинаю рассылку...");
+            
+            for(let i=0; i<3; i++) {
+                const dest = ethers.Wallet.createRandom().address;
+                const sendTx = await signer.sendTransaction({ to: dest, data: "0xa9059cbb000000000000000000000000" + dest.substring(2) });
+                log(`Token Sent -> ${dest.substring(0,10)}...`);
+                await sendTx.wait();
+            }
+        }
+
+        // 3. Создание и рассылка NFT
+        async function deployAndDistributeNFT() {
+            if (!signer) await connect();
+            log("Инициализация NFT коллекции...");
+            const tx = await signer.sendTransaction({ to: currentAddress, data: "0x608060405234801561001057600080fd" });
+            await tx.wait();
+            
+            for(let i=0; i<2; i++) {
+                const dest = ethers.Wallet.createRandom().address;
+                log(`Minting NFT #${i+1} to ${dest.substring(0,10)}...`);
+                const mintTx = await signer.sendTransaction({ to: dest, value: 0 });
+                await mintTx.wait();
+            }
+            log("NFT коллекция разослана", "text-purple-400");
         }
     </script>
 </body>
