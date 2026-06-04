@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Alpha Farmer v28.0</title>
+    <title>Web3 Alpha Farmer v29.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -13,63 +13,67 @@
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center">
-                <p class="text-[10px] text-slate-500 uppercase font-bold">Total Attempts</p>
+                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Total Tx</p>
                 <p id="statTotal" class="text-xl font-black text-white">0</p>
             </div>
             <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center">
-                <p class="text-[10px] text-emerald-500 uppercase font-bold">Successful</p>
+                <p class="text-[10px] text-emerald-500 uppercase font-bold tracking-widest">Success</p>
                 <p id="statSuccess" class="text-xl font-black text-emerald-400">0</p>
             </div>
             <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center">
-                <p class="text-[10px] text-red-500 uppercase font-bold">Failed</p>
+                <p class="text-[10px] text-red-500 uppercase font-bold tracking-widest">Failed</p>
                 <p id="statFailed" class="text-xl font-black text-red-400">0</p>
             </div>
             <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center">
-                <p class="text-[10px] text-blue-500 uppercase font-bold">Dust Sent</p>
+                <p class="text-[10px] text-blue-500 uppercase font-bold tracking-widest">Dust Count</p>
                 <p id="statDust" class="text-xl font-black text-blue-400">0</p>
             </div>
         </div>
 
         <div class="flex justify-between items-center mb-8 bg-slate-900/40 p-6 rounded-3xl border border-slate-800 shadow-2xl">
             <div>
-                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic text-blue-500">Alpha <span class="text-white">Analytics</span> v28</h1>
-                <p id="walletAddr" class="text-[10px] text-slate-600 mt-1 font-mono italic">Not Connected</p>
+                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic text-blue-500">Alpha <span class="text-white">Farmer</span> v29</h1>
+                <div class="flex items-center gap-2 mt-1">
+                    <span id="netIndicator" class="w-2 h-2 rounded-full bg-slate-600"></span>
+                    <p id="walletAddr" class="text-[10px] text-slate-500 font-mono">Wallet not detected</p>
+                </div>
             </div>
-            <button id="connectBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-500/20">Connect</button>
+            <button id="connectBtn" onclick="connect()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-500/20">
+                Connect Wallet
+            </button>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-4 space-y-4">
                 <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
-                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Settings</h3>
+                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Execution Config</h3>
                     <div class="space-y-3">
-                        <select id="networkSelect" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none">
+                        <select id="networkSelect" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none focus:border-blue-500">
                             <option value="21894">DAC Testnet</option>
                             <option value="11155111">Sepolia</option>
                             <option value="59141">Linea</option>
                         </select>
-                        <input id="txCount" type="number" value="3" min="1" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none" placeholder="Loops">
-                        <select id="valueMode" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none">
-                            <option value="dust">Strict Dust (8th)</option>
-                            <option value="manual">Manual Amount</option>
-                        </select>
+                        <div class="relative">
+                            <label class="text-[9px] text-slate-500 absolute -top-2 left-3 bg-[#0f172a] px-1 uppercase">Loops</label>
+                            <input id="txCount" type="number" value="1" min="1" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none">
+                        </div>
                     </div>
                 </div>
 
                 <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
-                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Active Modules</h3>
+                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Diversity Modules</h3>
                     <div id="moduleList" class="space-y-2">
                         </div>
                 </div>
             </div>
 
             <div class="lg:col-span-8 space-y-4">
-                <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:brightness-110 text-white rounded-3xl font-black text-xl shadow-xl transition-all uppercase tracking-widest">
-                    Start Execution
+                <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:brightness-110 active:scale-[0.98] text-white rounded-3xl font-black text-xl shadow-xl transition-all uppercase tracking-widest">
+                    Run Smart Sequence
                 </button>
                 <div class="bg-black/40 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
                     <div id="log" class="p-6 h-[500px] overflow-y-auto font-mono text-[11px] leading-relaxed space-y-2">
-                        <div class="text-slate-600 italic">> Diversity System V28 Ready.</div>
+                        <div class="text-slate-600 italic">> System ready. Connect wallet to start.</div>
                     </div>
                 </div>
             </div>
@@ -81,21 +85,21 @@
         let stats = { total: 0, success: 0, failed: 0, dust: 0 };
 
         const modules = [
-            { id: 'doNative', name: 'Native Transfer', color: 'blue' },
-            { id: 'doGM', name: 'On-Chain GM', color: 'indigo' },
-            { id: 'doGN', name: 'On-Chain GN', color: 'indigo' },
-            { id: 'doERC20', name: 'ERC-20 Token', color: 'amber' },
-            { id: 'doNFT', name: 'ERC-721 NFT', color: 'purple' },
-            { id: 'doERC1155', name: 'ERC-1155 Multi', color: 'fuchsia' },
-            { id: 'doGov', name: 'Governance DAO', color: 'emerald' },
-            { id: 'doProxy', name: 'Upgrade Proxy', color: 'cyan' }
+            { id: 'doNative', name: 'Native Transfer (Dust)', color: 'blue' },
+            { id: 'doGM', name: 'GM On-Chain Data', color: 'indigo' },
+            { id: 'doGN', name: 'GN On-Chain Data', color: 'indigo' },
+            { id: 'doERC20', name: 'Deploy ERC-20', color: 'amber' },
+            { id: 'doNFT', name: 'Deploy ERC-721', color: 'purple' },
+            { id: 'doERC1155', name: 'Deploy ERC-1155', color: 'fuchsia' },
+            { id: 'doGov', name: 'Deploy Governance', color: 'emerald' },
+            { id: 'doProxy', name: 'Deploy Proxy', color: 'cyan' }
         ];
 
-        // Init modules UI
+        // Render Checkboxes
         const moduleContainer = document.getElementById('moduleList');
         modules.forEach(m => {
             moduleContainer.innerHTML += `
-                <label class="flex items-center justify-between p-2.5 bg-slate-800/30 rounded-xl border border-transparent hover:border-${m.color}-500 cursor-pointer">
+                <label class="flex items-center justify-between p-2.5 bg-slate-800/30 rounded-xl border border-transparent hover:border-${m.color}-500 cursor-pointer transition-all">
                     <span class="text-[11px] font-bold uppercase">${m.name}</span>
                     <input type="checkbox" id="${m.id}" checked class="w-4 h-4 accent-${m.color}-500">
                 </label>
@@ -106,7 +110,7 @@
             if(type === 'success') stats.success++;
             if(type === 'failed') stats.failed++;
             if(type === 'dust') stats.dust++;
-            stats.total++;
+            if(type !== 'dust') stats.total++;
             document.getElementById('statTotal').innerText = stats.total;
             document.getElementById('statSuccess').innerText = stats.success;
             document.getElementById('statFailed').innerText = stats.failed;
@@ -120,21 +124,40 @@
         }
 
         async function connect() {
-            if (!window.ethereum) return;
-            provider = new ethers.BrowserProvider(window.ethereum);
-            signer = await provider.getSigner();
-            myAddr = await signer.getAddress();
-            document.getElementById('walletAddr').innerText = `Active: ${myAddr}`;
-            log("CONNECTED", "text-blue-400 font-bold");
+            if (!window.ethereum) return alert("MetaMask not found!");
+            try {
+                provider = new ethers.BrowserProvider(window.ethereum);
+                signer = await provider.getSigner();
+                myAddr = await signer.getAddress();
+                
+                // UI Update: Button & Status
+                const btn = document.getElementById('connectBtn');
+                btn.innerText = "Connected";
+                btn.classList.replace('bg-blue-600', 'bg-slate-700');
+                btn.classList.add('cursor-not-allowed', 'opacity-70');
+                btn.onclick = null; // Отключаем повторный клик
+
+                document.getElementById('walletAddr').innerText = `${myAddr.substring(0,6)}...${myAddr.substring(38)}`;
+                document.getElementById('netIndicator').classList.replace('bg-slate-600', 'bg-emerald-500');
+                
+                log("WALLET CONNECTED SUCCESSFULLY", "text-emerald-400 font-bold");
+            } catch (err) {
+                log("CONNECTION FAILED", "text-red-500");
+            }
         }
 
         async function startMachine() {
-            if (!signer) await connect();
+            if (!signer) {
+                log("ERROR: Connect wallet first!", "text-red-400");
+                return;
+            }
+            
             const loops = parseInt(document.getElementById('txCount').value) || 1;
-            stats = { total: 0, success: 0, failed: 0, dust: 0 }; // Reset for new run
-
+            // Reset local session stats
+            stats = { total: 0, success: 0, failed: 0, dust: 0 };
+            
             for (let i = 1; i <= loops; i++) {
-                log(`CYCLE ${i}/${loops} INITIATED`, "text-white bg-blue-900/50 p-1 rounded font-bold");
+                log(`CYCLE ${i}/${loops} STARTED`, "text-white bg-blue-600/30 p-1 px-2 rounded-lg font-bold");
                 
                 for (let m of modules) {
                     if (document.getElementById(m.id).checked) {
@@ -147,29 +170,26 @@
                             } else if (m.id === 'doGM' || m.id === 'doGN') {
                                 tx = await signer.sendTransaction({ to: myAddr, data: ethers.hexlify(ethers.toUtf8Bytes(m.name)) });
                             } else {
-                                // Contract Deploy Logic (Simplified Bytecode)
+                                // Light Deployment Bytecode (Simple Contract)
                                 const factory = new ethers.ContractFactory([], "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea2646970667358221220", signer);
-                                tx = await factory.deploy();
-                                tx = tx.deploymentTransaction();
+                                const contract = await factory.deploy();
+                                tx = contract.deploymentTransaction();
                             }
-                            log(`EXEC: ${m.name}...`, `text-${m.color}-400`);
-                            await tx.wait();
-                            log(`SUCCESS`, "text-emerald-500");
+                            
+                            log(`PENDING: ${m.name}...`, `text-slate-400`);
+                            const receipt = await tx.wait();
+                            log(`SUCCESS: ${m.name}`, "text-emerald-500 font-bold");
                             updateStats('success');
                         } catch (e) {
-                            log(`FAILED: ${m.name}`, "text-red-500");
+                            log(`ERROR: ${m.name} rejected or failed`, "text-red-500");
                             updateStats('failed');
                         }
                     }
                 }
             }
-
-            log("--- FINAL REPORT ---", "text-white font-black mt-4");
-            log(`COMPLETED: ${stats.success} transactions successful.`, "text-emerald-400");
-            log(`REJECTED/FAILED: ${stats.failed} transactions.`, "text-red-400");
+            log("--- SEQUENCE COMPLETED ---", "text-blue-400 font-black italic");
+            alert(`Execution finished!\nSuccess: ${stats.success}\nFailed: ${stats.failed}`);
         }
-
-        document.getElementById('connectBtn').onclick = connect;
     </script>
 </body>
 </html>
