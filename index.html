@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Alpha Farmer v25.0</title>
+    <title>Web3 Alpha Farmer v26.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -12,62 +12,81 @@
     <div class="max-w-6xl mx-auto p-4 md:p-8">
         <div class="flex justify-between items-center mb-8 bg-slate-900/40 p-6 rounded-3xl border border-slate-800 shadow-2xl">
             <div>
-                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic text-blue-500">Alpha <span class="text-white">Farmer</span> v25</h1>
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest italic">Multi-Tx & Custom Value Support</p>
+                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic text-blue-500">Alpha <span class="text-white">Master</span> v26</h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest italic">All-in-One: Networks, Dust, Loops, Diversity</p>
             </div>
             <div class="text-right">
                 <button id="connectBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-500/20">Connect Wallet</button>
-                <div id="walletAddr" class="text-[10px] text-slate-600 mt-1 font-mono italic italic">0x...</div>
+                <div id="walletAddr" class="text-[10px] text-slate-600 mt-1 font-mono">Disconnected</div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-5 space-y-4">
+                
                 <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
-                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Global Settings</h3>
+                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">System Config</h3>
                     <div class="space-y-4">
                         <div>
-                            <label class="text-[10px] text-slate-500 uppercase ml-1 block mb-1">Iterations (Loops)</label>
-                            <input id="txCount" type="number" value="1" min="1" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none focus:border-blue-500">
+                            <label class="text-[10px] text-slate-500 uppercase ml-1 block mb-1">Target Network</label>
+                            <select id="networkSelect" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none">
+                                <option value="21894">DAC Testnet</option>
+                                <option value="11155111">Ethereum Sepolia</option>
+                                <option value="59141">Linea Sepolia</option>
+                                <option value="84532">Base Sepolia</option>
+                            </select>
                         </div>
-                        
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="space-y-1">
-                                <label class="text-[10px] text-slate-500 uppercase ml-1">Native Mode</label>
-                                <select id="valueMode" onchange="toggleValueInput()" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none">
-                                    <option value="dust">Strict Dust (8th)</option>
-                                    <option value="manual">Manual Amount</option>
-                                </select>
-                            </div>
-                            <div id="manualInputBlock" class="space-y-1 hidden">
-                                <label class="text-[10px] text-slate-500 uppercase ml-1">Amount</label>
-                                <input id="manualAmount" type="text" value="0.001" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-mono outline-none">
-                            </div>
+                        <div>
+                            <label class="text-[10px] text-slate-500 uppercase ml-1 block mb-1">Iterations (Loops Count)</label>
+                            <input id="txCount" type="number" value="1" min="1" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none focus:border-blue-500">
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
-                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic">Action Modules</h3>
+                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Amount Logic</h3>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-[10px] text-slate-500 uppercase ml-1 block mb-1">Mode</label>
+                                <select id="valueMode" onchange="toggleValueInput()" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none">
+                                    <option value="dust">Strict Dust (8th)</option>
+                                    <option value="manual">Manual Fixed</option>
+                                </select>
+                            </div>
+                            <div id="manualInputBlock" class="hidden">
+                                <label class="text-[10px] text-slate-500 uppercase ml-1 block mb-1">Amount</label>
+                                <input id="manualAmount" type="text" value="0.0001" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-mono outline-none">
+                            </div>
+                        </div>
+                        <div id="dustPreview" class="p-3 bg-black/40 rounded-xl border border-slate-800 text-center">
+                            <span class="text-[10px] text-slate-500 uppercase">Pattern:</span>
+                            <span class="text-xs font-mono text-blue-400 ml-2">0.0000000[1-9]</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
+                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Active Modules</h3>
                     <div class="space-y-2">
                         <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-blue-500 cursor-pointer transition-all">
-                            <span class="text-[11px] font-bold uppercase tracking-tight">Native Transfer</span>
+                            <span class="text-[11px] font-bold uppercase">1. Native Transfer</span>
                             <input type="checkbox" id="doNative" checked class="w-4 h-4 accent-blue-500">
                         </label>
                         <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-indigo-500 cursor-pointer transition-all">
-                            <span class="text-[11px] font-bold uppercase tracking-tight">GM Message</span>
+                            <span class="text-[11px] font-bold uppercase">2. On-Chain "GM"</span>
                             <input type="checkbox" id="doGM" checked class="w-4 h-4 accent-indigo-500">
                         </label>
                         <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-indigo-400 cursor-pointer transition-all">
-                            <span class="text-[11px] font-bold uppercase tracking-tight">GN Message</span>
+                            <span class="text-[11px] font-bold uppercase">3. On-Chain "GN"</span>
                             <input type="checkbox" id="doGN" checked class="w-4 h-4 accent-indigo-400">
                         </label>
                         <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-amber-500 cursor-pointer transition-all">
-                            <span class="text-[11px] font-bold uppercase tracking-tight">Deploy ERC-20</span>
+                            <span class="text-[11px] font-bold uppercase">4. Deploy ERC-20</span>
                             <input type="checkbox" id="doERC20" checked class="w-4 h-4 accent-amber-500">
                         </label>
                         <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-purple-500 cursor-pointer transition-all">
-                            <span class="text-[11px] font-bold uppercase tracking-tight">Deploy NFT</span>
+                            <span class="text-[11px] font-bold uppercase">5. Deploy NFT</span>
                             <input type="checkbox" id="doNFT" checked class="w-4 h-4 accent-purple-500">
                         </label>
                     </div>
@@ -76,12 +95,12 @@
 
             <div class="lg:col-span-7 space-y-6">
                 <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:brightness-110 active:scale-[0.98] text-white rounded-3xl font-black text-xl shadow-xl transition-all uppercase tracking-widest">
-                    Run Sequence
+                    Run Diversity Protocol
                 </button>
 
                 <div class="bg-black/40 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
-                    <div id="log" class="p-6 h-[500px] overflow-y-auto font-mono text-[11px] leading-relaxed space-y-2">
-                        <div class="text-slate-600 italic">> Ready for deployment.</div>
+                    <div id="log" class="p-6 h-[580px] overflow-y-auto font-mono text-[11px] leading-relaxed space-y-2">
+                        <div class="text-slate-600 italic">> Diversity System V26. Ready for operations.</div>
                     </div>
                 </div>
             </div>
@@ -99,6 +118,7 @@
         function toggleValueInput() {
             const mode = document.getElementById('valueMode').value;
             document.getElementById('manualInputBlock').style.display = (mode === 'manual') ? 'block' : 'none';
+            document.getElementById('dustPreview').style.display = (mode === 'dust') ? 'block' : 'none';
         }
 
         function log(msg, color = "text-slate-400") {
@@ -107,41 +127,50 @@
             div.scrollTop = div.scrollHeight;
         }
 
-        function getNativeValue() {
-            const mode = document.getElementById('valueMode').value;
-            if (mode === 'dust') {
-                const random8 = Math.floor(Math.random() * 9 + 1); // 1-9
-                return `0.0000000${random8}`;
-            }
-            return document.getElementById('manualAmount').value;
-        }
-
         async function connect() {
-            if (!window.ethereum) return alert("MetaMask not found");
+            if (!window.ethereum) return alert("Install MetaMask!");
             provider = new ethers.BrowserProvider(window.ethereum);
             signer = await provider.getSigner();
             myAddr = await signer.getAddress();
-            document.getElementById('walletAddr').innerText = myAddr;
-            log("CONNECTED: " + myAddr.substring(0,12) + "...", "text-blue-400 font-bold");
+            document.getElementById('walletAddr').innerText = myAddr.substring(0,15) + "...";
+            log("WALLET CONNECTED: " + myAddr, "text-blue-400 font-bold");
+        }
+
+        async function checkNetwork() {
+            const targetId = "0x" + parseInt(document.getElementById('networkSelect').value).toString(16);
+            const currentId = await window.ethereum.request({ method: 'eth_chainId' });
+            if (currentId !== targetId) {
+                log("NETWORK MISMATCH: Attempting switch...", "text-amber-500");
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: targetId }],
+                    });
+                } catch (e) { log("Please switch network in MetaMask manually", "text-red-500"); return false; }
+            }
+            return true;
         }
 
         async function startMachine() {
             if (!signer) await connect();
-            const iterations = parseInt(document.getElementById('txCount').value) || 1;
+            if (!(await checkNetwork())) return;
 
-            for (let i = 1; i <= iterations; i++) {
-                log(`--- STARTING LOOP ${i} / ${iterations} ---`, "text-white font-black bg-blue-900/30 p-1 rounded");
+            const loops = parseInt(document.getElementById('txCount').value) || 1;
 
-                // 1. Native Dust/Manual
+            for (let i = 1; i <= loops; i++) {
+                log(`>>> STARTING LOOP ${i} OF ${loops}`, "text-white bg-blue-600/20 p-1 rounded font-black mt-4");
+
+                // 1. Native (Dust or Manual)
                 if (document.getElementById('doNative').checked) {
                     try {
-                        const val = getNativeValue();
+                        const mode = document.getElementById('valueMode').value;
+                        const amount = (mode === 'dust') ? `0.0000000${Math.floor(Math.random() * 9 + 1)}` : document.getElementById('manualAmount').value;
                         const target = ethers.Wallet.createRandom().address;
-                        log(`ACTION: Sending ${val} Native...`, "text-blue-300 italic");
-                        const tx = await signer.sendTransaction({ to: target, value: ethers.parseEther(val) });
+                        log(`ACTION: Sending ${amount} to random address...`, "text-blue-300");
+                        const tx = await signer.sendTransaction({ to: target, value: ethers.parseEther(amount) });
                         await tx.wait();
-                        log(`[SUCCESS] Tx: ${tx.hash.substring(0,15)}...`, "text-emerald-400");
-                    } catch (e) { log("[ERROR] Native Transfer", "text-red-500"); }
+                        log(`[SUCCESS] Transfer OK: ${tx.hash.substring(0,15)}...`, "text-emerald-400");
+                    } catch (e) { log("[FAILED] Native Transfer", "text-red-500"); }
                 }
 
                 // 2. GM
@@ -151,7 +180,7 @@
                         const tx = await signer.sendTransaction({ to: myAddr, data: ethers.hexlify(ethers.toUtf8Bytes("Good Morning")) });
                         await tx.wait();
                         log("[SUCCESS] GM Recorded", "text-emerald-400");
-                    } catch (e) { log("[ERROR] GM", "text-red-500"); }
+                    } catch (e) { log("[FAILED] GM", "text-red-500"); }
                 }
 
                 // 3. GN
@@ -161,32 +190,32 @@
                         const tx = await signer.sendTransaction({ to: myAddr, data: ethers.hexlify(ethers.toUtf8Bytes("Good Night")) });
                         await tx.wait();
                         log("[SUCCESS] GN Recorded", "text-emerald-400");
-                    } catch (e) { log("[ERROR] GN", "text-red-500"); }
+                    } catch (e) { log("[FAILED] GN", "text-red-500"); }
                 }
 
                 // 4. ERC-20
                 if (document.getElementById('doERC20').checked) {
                     try {
-                        log("ACTION: Deploying ERC-20...", "text-amber-500");
+                        log("ACTION: Deploying ERC-20 Contract...", "text-amber-500");
                         const factory = new ethers.ContractFactory(["constructor(string n, string s, uint256 su)"], BYTECODES.ERC20, signer);
                         const contract = await factory.deploy("Alpha Token", "AT", ethers.parseEther("1000"));
                         await contract.deploymentTransaction().wait();
-                        log(`[SUCCESS] Token: ${await contract.getAddress()}`, "text-emerald-400");
-                    } catch (e) { log("[ERROR] ERC-20", "text-red-500"); }
+                        log(`[SUCCESS] Token at: ${await contract.getAddress()}`, "text-emerald-400");
+                    } catch (e) { log("[FAILED] ERC-20", "text-red-500"); }
                 }
 
                 // 5. NFT
                 if (document.getElementById('doNFT').checked) {
                     try {
-                        log("ACTION: Deploying NFT...", "text-purple-500");
+                        log("ACTION: Deploying NFT Contract...", "text-purple-500");
                         const factory = new ethers.ContractFactory(["constructor(string n, string s)"], BYTECODES.NFT, signer);
                         const contract = await factory.deploy("Alpha NFT", "ANFT");
                         await contract.deploymentTransaction().wait();
-                        log(`[SUCCESS] NFT: ${await contract.getAddress()}`, "text-emerald-400");
-                    } catch (e) { log("[ERROR] NFT", "text-red-500"); }
+                        log(`[SUCCESS] NFT at: ${await contract.getAddress()}`, "text-emerald-400");
+                    } catch (e) { log("[FAILED] NFT", "text-red-500"); }
                 }
             }
-            log("--- ALL SEQUENCES COMPLETED ---", "text-blue-500 font-black");
+            log("=== ALL TASKS FINISHED ===", "text-blue-500 font-black italic");
         }
 
         document.getElementById('connectBtn').onclick = connect;
