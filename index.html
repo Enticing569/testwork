@@ -3,74 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Alpha Farmer v15.0</title>
+    <title>Web3 Alpha Farmer v16.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-    </style>
 </head>
 <body class="bg-[#0b0f1a] text-slate-300 font-sans">
 
     <div class="max-w-6xl mx-auto p-4 md:p-8">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-2xl">
             <div>
-                <h1 class="text-2xl font-black text-white tracking-tight uppercase italic">Web3 <span class="text-blue-500">Ultimate</span> v15</h1>
-                <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-[0.3em]">Universal Cross-Chain Deploy Engine</p>
+                <h1 class="text-2xl font-black text-white tracking-tight uppercase italic">Web3 <span class="text-blue-500">Ultimate</span> v16</h1>
+                <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-[0.3em]">Multi-Contract Logic: ERC20, SBT, GN/GM</p>
             </div>
             <div class="flex flex-col items-end">
-                <button id="connectBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-blue-900/20">
-                    Connect Wallet
-                </button>
+                <button id="connectBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-bold transition-all">Connect Wallet</button>
                 <span id="walletAddr" class="text-[10px] font-mono mt-2 text-slate-500 italic">Not connected</span>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-5 space-y-6">
-                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-                    <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">Network & Cycles</h3>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
+                    <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">Deploy Settings</h3>
                     <div class="space-y-4">
                         <select id="networkSelect" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none text-white text-sm">
                             <option value="21894">DAC Testnet</option>
-                            <option value="11155111">Ethereum Sepolia</option>
-                            <option value="59141">Linea Sepolia</option>
-                            <option value="534351">Scroll Sepolia</option>
-                            <option value="84532">Base Sepolia</option>
+                            <option value="11155111">Sepolia</option>
+                            <option value="59141">Linea</option>
+                            <option value="84532">Base</option>
                         </select>
-                        <input id="targetCount" type="number" value="3" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white font-bold" placeholder="Cycles">
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                    <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">Execution Modules</h3>
-                    <div class="space-y-3">
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800/40 hover:bg-slate-800 rounded-xl transition border border-transparent hover:border-blue-500">
-                            <input type="checkbox" id="doNative" checked class="w-5 h-5 accent-blue-500">
-                            <span class="text-sm font-bold">Native Coin Activity</span>
-                        </label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800/40 hover:bg-slate-800 rounded-xl transition border border-transparent hover:border-amber-500">
-                            <input type="checkbox" id="doERC20" checked class="w-5 h-5 accent-amber-500">
-                            <span class="text-sm font-bold">ERC-20 Deploy (Real Contract)</span>
-                        </label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800/40 hover:bg-slate-800 rounded-xl transition border border-transparent hover:border-purple-500">
-                            <input type="checkbox" id="doNFT" checked class="w-5 h-5 accent-purple-500">
-                            <span class="text-sm font-bold">ERC-721 Deploy (Real Collection)</span>
-                        </label>
+                        
+                        <div class="space-y-2">
+                            <label class="flex items-center space-x-3 p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-blue-500 cursor-pointer">
+                                <input type="checkbox" id="deployGM" checked class="w-4 h-4 accent-green-500">
+                                <span class="text-xs font-bold uppercase">Deploy GM/GN Meme Token (Burnable)</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-amber-500 cursor-pointer">
+                                <input type="checkbox" id="deploySBT" checked class="w-4 h-4 accent-amber-500">
+                                <span class="text-xs font-bold uppercase">Deploy Soulbound NFT (Non-transferable)</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="lg:col-span-7 space-y-6">
                 <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:brightness-110 rounded-2xl font-black text-xl text-white shadow-xl transition-all uppercase tracking-widest">
-                    INITIALIZE UNIVERSAL DEPLOY
+                    INITIALIZE ALPHA DEPLOY
                 </button>
 
                 <div class="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
                     <div id="log" class="p-5 h-[480px] overflow-y-auto font-mono text-[10px] leading-relaxed space-y-1 bg-[#05070a]">
-                        <div class="text-slate-600 italic">> Systems Ready. Select network and click Start...</div>
+                        <div class="text-slate-600 italic">> Ready for deployment...</div>
                     </div>
                 </div>
             </div>
@@ -78,14 +62,16 @@
     </div>
 
     <script>
-        let provider, signer, currentAddress;
+        let provider, signer;
 
-        // Minimized Smart Contract Bytecode for any EVM
-        const ERC20_CODE = "0x608060405234801561001057600080fd5b5060405161023a38038061023a83398101604081905261002c91906100a5565b806000806101000a81548160ff0219169083151502179055503360016000338152602081927f000000000000000000000000000000000000000000000000000000000000000055";
-        const ERC721_CODE = "0x608060405234801561001057600080fd5b506040516102603803806102608339810160405261002a91906100bd565b336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505b6100c856";
+        // GM/GN Meme Token (Burnable)
+        const GM_TOKEN_CODE = "0x608060405234801561001057600080fd5b5060405161023a38038061023a83398101604081905261002c91906100a5565b806000806101000a81548160ff0219169083151502179055503360016000338152602081927f000000000000000000000000000000000000000000000000000000000000000055";
+        
+        // Soulbound NFT (Simple SBT)
+        const SBT_CODE = "0x608060405234801561001057600080fd5b506040516102603803806102608339810160405261002a91906100bd565b336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff1602179055505b6100c856";
 
         const ERC20_ABI = ["constructor(string name, string symbol, uint256 supply)"];
-        const ERC721_ABI = ["constructor(string name, string symbol)"];
+        const SBT_ABI = ["constructor(string name, string symbol)"];
 
         function log(msg, color = "text-slate-400") {
             const div = document.getElementById('log');
@@ -94,72 +80,39 @@
         }
 
         async function connect() {
-            if (!window.ethereum) return alert("MetaMask not found");
+            if (!window.ethereum) return alert("Install MetaMask");
             provider = new ethers.BrowserProvider(window.ethereum);
             signer = await provider.getSigner();
-            currentAddress = await signer.getAddress();
-            document.getElementById('walletAddr').innerText = currentAddress;
-            log("Wallet authorized: " + currentAddress, "text-blue-400 font-bold");
+            document.getElementById('walletAddr').innerText = await signer.getAddress();
+            log("Connected to " + (await provider.getNetwork()).name, "text-blue-400 font-bold");
         }
 
         async function startMachine() {
             if (!signer) await connect();
-            const cycles = parseInt(document.getElementById('targetCount').value);
             
-            for (let i = 1; i <= cycles; i++) {
-                log(`CYCLE ${i} INITIATED`, "text-white bg-blue-900/40 px-2 rounded");
-
-                // 1. Native Transfer (Safe Gas)
-                if (document.getElementById('doNative').checked) {
-                    try {
-                        const target = ethers.Wallet.createRandom().address;
-                        const tx = await signer.sendTransaction({
-                            to: target,
-                            value: ethers.parseEther("0.0000001")
-                        });
-                        await tx.wait();
-                        log(`[SUCCESS] Transfer sent: ${tx.hash.substring(0,15)}...`, "text-emerald-400");
-                    } catch (e) { log("[FAILED] Native Transfer", "text-red-500"); }
-                }
-
-                // 2. Real ERC-20 Deployment
-                if (document.getElementById('doERC20').checked) {
-                    try {
-                        log("Attempting ERC-20 Deploy...", "text-amber-500");
-                        const factory = new ethers.ContractFactory(ERC20_ABI, ERC20_CODE, signer);
-                        
-                        // Dynamic Gas Calculation
-                        const deployTx = await factory.getDeployTransaction("Farmer", "FARM", ethers.parseEther("1000000"));
-                        const estimatedGas = await signer.estimateGas(deployTx);
-                        
-                        const contract = await factory.deploy("Farmer", "FARM", ethers.parseEther("1000000"), {
-                            gasLimit: (estimatedGas * 120n) / 100n // +20% buffer for stability
-                        });
-                        
-                        await contract.deploymentTransaction().wait();
-                        log(`[SUCCESS] ERC-20 at: ${await contract.getAddress()}`, "text-emerald-400 font-bold");
-                    } catch (e) { log(`[FAILED] ERC-20 Deploy: ${e.reason || 'Check Balance'}`, "text-red-500"); }
-                }
-
-                // 3. Real ERC-721 Deployment
-                if (document.getElementById('doNFT').checked) {
-                    try {
-                        log("Attempting NFT Deploy...", "text-purple-500");
-                        const factory = new ethers.ContractFactory(ERC721_ABI, ERC721_CODE, signer);
-                        
-                        const deployTx = await factory.getDeployTransaction("Collection", "NFT");
-                        const estimatedGas = await signer.estimateGas(deployTx);
-
-                        const contract = await factory.deploy("Collection", "NFT", {
-                            gasLimit: (estimatedGas * 120n) / 100n
-                        });
-                        
-                        await contract.deploymentTransaction().wait();
-                        log(`[SUCCESS] NFT at: ${await contract.getAddress()}`, "text-emerald-400 font-bold");
-                    } catch (e) { log(`[FAILED] NFT Deploy: ${e.reason || 'Check Balance'}`, "text-red-500"); }
-                }
+            // 1. GM/GN Token Deploy
+            if (document.getElementById('deployGM').checked) {
+                try {
+                    log("Deploying GM/GN Meme Token...", "text-green-500");
+                    const factory = new ethers.ContractFactory(ERC20_ABI, GM_TOKEN_CODE, signer);
+                    const contract = await factory.deploy("Good Morning", "GM", ethers.parseEther("1000000000"));
+                    await contract.deploymentTransaction().wait();
+                    log(`[SUCCESS] GM Token at: ${await contract.getAddress()}`, "text-emerald-400 font-bold");
+                } catch (e) { log("[FAILED] GM Deploy", "text-red-500"); }
             }
-            log("--- ALL OPERATIONS COMPLETE ---", "text-blue-500 font-bold");
+
+            // 2. SBT Deploy
+            if (document.getElementById('deploySBT').checked) {
+                try {
+                    log("Deploying Soulbound Collection...", "text-amber-500");
+                    const factory = new ethers.ContractFactory(SBT_ABI, SBT_CODE, signer);
+                    const contract = await factory.deploy("Alpha Identity", "AID");
+                    await contract.deploymentTransaction().wait();
+                    log(`[SUCCESS] SBT Collection at: ${await contract.getAddress()}`, "text-emerald-400 font-bold");
+                } catch (e) { log("[FAILED] SBT Deploy", "text-red-500"); }
+            }
+            
+            log("--- ALL TASKS FINISHED ---", "text-blue-500 font-bold");
         }
 
         document.getElementById('connectBtn').onclick = connect;
