@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Alpha Farmer v26.0</title>
+    <title>Web3 Alpha Farmer v27.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#020408] text-slate-300 font-sans">
 
     <div class="max-w-6xl mx-auto p-4 md:p-8">
+        <!-- Header -->
         <div class="flex justify-between items-center mb-8 bg-slate-900/40 p-6 rounded-3xl border border-slate-800 shadow-2xl">
             <div>
-                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic text-blue-500">Alpha <span class="text-white">Master</span> v26</h1>
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest italic">All-in-One: Networks, Dust, Loops, Diversity</p>
+                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic text-blue-500">Alpha <span class="text-white">GodMode</span> v27</h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest italic">8 Contract Types & Actions Combined</p>
             </div>
             <div class="text-right">
                 <button id="connectBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-500/20">Connect Wallet</button>
@@ -22,8 +23,10 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Sidebar: Controls -->
             <div class="lg:col-span-5 space-y-4">
                 
+                <!-- System Config -->
                 <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
                     <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">System Config</h3>
                     <div class="space-y-4">
@@ -43,6 +46,7 @@
                     </div>
                 </div>
 
+                <!-- Amount Logic -->
                 <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
                     <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Amount Logic</h3>
                     <div class="space-y-4">
@@ -66,41 +70,61 @@
                     </div>
                 </div>
 
+                <!-- Modules (8 Total Actions) -->
                 <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
                     <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Active Modules</h3>
                     <div class="space-y-2">
-                        <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-blue-500 cursor-pointer transition-all">
-                            <span class="text-[11px] font-bold uppercase">1. Native Transfer</span>
+                        <!-- Стандартные транзы -->
+                        <label class="flex items-center justify-between p-2.5 bg-slate-800/30 rounded-xl border border-transparent hover:border-blue-500 cursor-pointer transition-all">
+                            <span class="text-[11px] font-bold uppercase">1. Native Dust Transfer</span>
                             <input type="checkbox" id="doNative" checked class="w-4 h-4 accent-blue-500">
                         </label>
-                        <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-indigo-500 cursor-pointer transition-all">
-                            <span class="text-[11px] font-bold uppercase">2. On-Chain "GM"</span>
+                        <label class="flex items-center justify-between p-2.5 bg-slate-800/30 rounded-xl border border-transparent hover:border-indigo-500 cursor-pointer transition-all">
+                            <span class="text-[11px] font-bold uppercase">2. On-Chain "GM" Data</span>
                             <input type="checkbox" id="doGM" checked class="w-4 h-4 accent-indigo-500">
                         </label>
-                        <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-indigo-400 cursor-pointer transition-all">
-                            <span class="text-[11px] font-bold uppercase">3. On-Chain "GN"</span>
+                        <label class="flex items-center justify-between p-2.5 bg-slate-800/30 rounded-xl border border-transparent hover:border-indigo-400 cursor-pointer transition-all">
+                            <span class="text-[11px] font-bold uppercase">3. On-Chain "GN" Data</span>
                             <input type="checkbox" id="doGN" checked class="w-4 h-4 accent-indigo-400">
                         </label>
-                        <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-amber-500 cursor-pointer transition-all">
-                            <span class="text-[11px] font-bold uppercase">4. Deploy ERC-20</span>
+                        
+                        <!-- Разновидности Контрактов -->
+                        <div class="h-[1px] bg-slate-800 my-2"></div>
+                        <p class="text-[9px] text-slate-500 uppercase font-bold tracking-widest px-1">Smart Contract Factories</p>
+                        
+                        <label class="flex items-center justify-between p-2.5 bg-amber-950/20 rounded-xl border border-transparent hover:border-amber-500 cursor-pointer transition-all">
+                            <span class="text-[11px] font-bold text-amber-400 uppercase">4. Deploy ERC-20 (Token)</span>
                             <input type="checkbox" id="doERC20" checked class="w-4 h-4 accent-amber-500">
                         </label>
-                        <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-purple-500 cursor-pointer transition-all">
-                            <span class="text-[11px] font-bold uppercase">5. Deploy NFT</span>
+                        <label class="flex items-center justify-between p-2.5 bg-purple-950/20 rounded-xl border border-transparent hover:border-purple-500 cursor-pointer transition-all">
+                            <span class="text-[11px] font-bold text-purple-400 uppercase">5. Deploy ERC-721 (NFT)</span>
                             <input type="checkbox" id="doNFT" checked class="w-4 h-4 accent-purple-500">
+                        </label>
+                        <label class="flex items-center justify-between p-2.5 bg-fuchsia-950/20 rounded-xl border border-transparent hover:border-fuchsia-500 cursor-pointer transition-all">
+                            <span class="text-[11px] font-bold text-fuchsia-400 uppercase">6. Deploy ERC-1155 (Multi-Token)</span>
+                            <input type="checkbox" id="doERC1155" checked class="w-4 h-4 accent-fuchsia-500">
+                        </label>
+                        <label class="flex items-center justify-between p-2.5 bg-emerald-950/20 rounded-xl border border-transparent hover:border-emerald-500 cursor-pointer transition-all">
+                            <span class="text-[11px] font-bold text-emerald-400 uppercase">7. Deploy Governance (DAO)</span>
+                            <input type="checkbox" id="doGov" checked class="w-4 h-4 accent-emerald-500">
+                        </label>
+                        <label class="flex items-center justify-between p-2.5 bg-cyan-950/20 rounded-xl border border-transparent hover:border-cyan-500 cursor-pointer transition-all">
+                            <span class="text-[11px] font-bold text-cyan-400 uppercase">8. Deploy Proxy (Upgradeable)</span>
+                            <input type="checkbox" id="doProxy" checked class="w-4 h-4 accent-cyan-500">
                         </label>
                     </div>
                 </div>
             </div>
 
+            <!-- Monitor -->
             <div class="lg:col-span-7 space-y-6">
                 <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:brightness-110 active:scale-[0.98] text-white rounded-3xl font-black text-xl shadow-xl transition-all uppercase tracking-widest">
-                    Run Diversity Protocol
+                    Execute All Protocols
                 </button>
 
                 <div class="bg-black/40 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
-                    <div id="log" class="p-6 h-[580px] overflow-y-auto font-mono text-[11px] leading-relaxed space-y-2">
-                        <div class="text-slate-600 italic">> Diversity System V26. Ready for operations.</div>
+                    <div id="log" class="p-6 h-[720px] overflow-y-auto font-mono text-[11px] leading-relaxed space-y-2">
+                        <div class="text-slate-600 italic">> Diversity Protocol Suite V27 initialized. Ready.</div>
                     </div>
                 </div>
             </div>
@@ -110,9 +134,13 @@
     <script>
         let provider, signer, myAddr;
 
+        // Минимальные уникальные байткоды для симуляции разных типов контрактов
         const BYTECODES = {
             ERC20: "0x608060405234801561001057600080fd5b5060405161023a38038061023a83398101604081905261002c91906100a5565b806000806101000a81548160ff0219169083151502179055503360016000338152602081927f000000000000000000000000000000000000000000000000000000000000000055",
-            NFT: "0x608060405234801561001057600080fd5b506040516102603803806102608339810160405261002a91906100bd565b336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff1602179055505b6100c856"
+            NFT: "0x608060405234801561001057600080fd5b506040516102603803806102608339810160405261002a91906100bd565b336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff1602179055505b6100c856",
+            ERC1155: "0x608060405234801561001057600080fd5b5060405161015038038061015083398101604052336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff1602179055505b600056",
+            GOV: "0x608060405234801561001057600080fd5b506040516101903803806101908339810160405260016000553360026000338152602081927f000000000000000000000000000000000000000000000000000000000000000055",
+            PROXY: "0x608060405234801561001057600080fd5b5060405161020038038061020083398101604052336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff16021790555b600056"
         };
 
         function toggleValueInput() {
@@ -140,13 +168,13 @@
             const targetId = "0x" + parseInt(document.getElementById('networkSelect').value).toString(16);
             const currentId = await window.ethereum.request({ method: 'eth_chainId' });
             if (currentId !== targetId) {
-                log("NETWORK MISMATCH: Attempting switch...", "text-amber-500");
+                log("NETWORK MISMATCH: Switching chain...", "text-amber-500");
                 try {
                     await window.ethereum.request({
                         method: 'wallet_switchEthereumChain',
                         params: [{ chainId: targetId }],
                     });
-                } catch (e) { log("Please switch network in MetaMask manually", "text-red-500"); return false; }
+                } catch (e) { log("Switch chain manually inside MetaMask", "text-red-500"); return false; }
             }
             return true;
         }
@@ -158,64 +186,97 @@
             const loops = parseInt(document.getElementById('txCount').value) || 1;
 
             for (let i = 1; i <= loops; i++) {
-                log(`>>> STARTING LOOP ${i} OF ${loops}`, "text-white bg-blue-600/20 p-1 rounded font-black mt-4");
+                log(`>>> STARTING CYCLE ${i} OF ${loops} <<<`, "text-white bg-blue-600/30 p-1.5 rounded font-black mt-4 block text-center uppercase tracking-widest");
 
-                // 1. Native (Dust or Manual)
+                // 1. Native Transfer
                 if (document.getElementById('doNative').checked) {
                     try {
                         const mode = document.getElementById('valueMode').value;
                         const amount = (mode === 'dust') ? `0.0000000${Math.floor(Math.random() * 9 + 1)}` : document.getElementById('manualAmount').value;
                         const target = ethers.Wallet.createRandom().address;
-                        log(`ACTION: Sending ${amount} to random address...`, "text-blue-300");
+                        log(`[EXEC] Native Transfer (${amount})...`, "text-blue-300");
                         const tx = await signer.sendTransaction({ to: target, value: ethers.parseEther(amount) });
                         await tx.wait();
-                        log(`[SUCCESS] Transfer OK: ${tx.hash.substring(0,15)}...`, "text-emerald-400");
+                        log(`[SUCCESS] Hash: ${tx.hash.substring(0,20)}...`, "text-emerald-400");
                     } catch (e) { log("[FAILED] Native Transfer", "text-red-500"); }
                 }
 
                 // 2. GM
                 if (document.getElementById('doGM').checked) {
                     try {
-                        log("ACTION: Writing GM Message...", "text-indigo-400");
+                        log("[EXEC] Writing On-Chain 'GM'...", "text-indigo-400");
                         const tx = await signer.sendTransaction({ to: myAddr, data: ethers.hexlify(ethers.toUtf8Bytes("Good Morning")) });
                         await tx.wait();
-                        log("[SUCCESS] GM Recorded", "text-emerald-400");
+                        log("[SUCCESS] GM Registered", "text-emerald-400");
                     } catch (e) { log("[FAILED] GM", "text-red-500"); }
                 }
 
                 // 3. GN
                 if (document.getElementById('doGN').checked) {
                     try {
-                        log("ACTION: Writing GN Message...", "text-indigo-300");
+                        log("[EXEC] Writing On-Chain 'GN'...", "text-indigo-300");
                         const tx = await signer.sendTransaction({ to: myAddr, data: ethers.hexlify(ethers.toUtf8Bytes("Good Night")) });
                         await tx.wait();
-                        log("[SUCCESS] GN Recorded", "text-emerald-400");
+                        log("[SUCCESS] GN Registered", "text-emerald-400");
                     } catch (e) { log("[FAILED] GN", "text-red-500"); }
                 }
 
                 // 4. ERC-20
                 if (document.getElementById('doERC20').checked) {
                     try {
-                        log("ACTION: Deploying ERC-20 Contract...", "text-amber-500");
+                        log("[FACTORY] Deploying ERC-20 Token...", "text-amber-400 font-bold");
                         const factory = new ethers.ContractFactory(["constructor(string n, string s, uint256 su)"], BYTECODES.ERC20, signer);
-                        const contract = await factory.deploy("Alpha Token", "AT", ethers.parseEther("1000"));
+                        const contract = await factory.deploy("Alpha Volatility", "AVOL", ethers.parseEther("1000000"));
                         await contract.deploymentTransaction().wait();
-                        log(`[SUCCESS] Token at: ${await contract.getAddress()}`, "text-emerald-400");
+                        log(`[SUCCESS] ERC-20 Address: ${await contract.getAddress()}`, "text-emerald-400");
                     } catch (e) { log("[FAILED] ERC-20", "text-red-500"); }
                 }
 
-                // 5. NFT
+                // 5. ERC-721 (NFT)
                 if (document.getElementById('doNFT').checked) {
                     try {
-                        log("ACTION: Deploying NFT Contract...", "text-purple-500");
+                        log("[FACTORY] Deploying ERC-721 Collection...", "text-purple-400 font-bold");
                         const factory = new ethers.ContractFactory(["constructor(string n, string s)"], BYTECODES.NFT, signer);
-                        const contract = await factory.deploy("Alpha NFT", "ANFT");
+                        const contract = await factory.deploy("Alpha Identity", "AID");
                         await contract.deploymentTransaction().wait();
-                        log(`[SUCCESS] NFT at: ${await contract.getAddress()}`, "text-emerald-400");
-                    } catch (e) { log("[FAILED] NFT", "text-red-500"); }
+                        log(`[SUCCESS] ERC-721 Address: ${await contract.getAddress()}`, "text-emerald-400");
+                    } catch (e) { log("[FAILED] ERC-721", "text-red-500"); }
+                }
+
+                // 6. ERC-1155 (Multi-Token)
+                if (document.getElementById('doERC1155').checked) {
+                    try {
+                        log("[FACTORY] Deploying ERC-1155 Multi-Token...", "text-fuchsia-400 font-bold");
+                        const factory = new ethers.ContractFactory(["constructor()"], BYTECODES.ERC1155, signer);
+                        const contract = await factory.deploy();
+                        await contract.deploymentTransaction().wait();
+                        log(`[SUCCESS] ERC-1155 Address: ${await contract.getAddress()}`, "text-emerald-400");
+                    } catch (e) { log("[FAILED] ERC-1155", "text-red-500"); }
+                }
+
+                // 7. Governance (DAO)
+                if (document.getElementById('doGov').checked) {
+                    try {
+                        log("[FACTORY] Deploying Governance DAO Contract...", "text-emerald-400 font-bold");
+                        const factory = new ethers.ContractFactory(["constructor()"], BYTECODES.GOV, signer);
+                        const contract = await factory.deploy();
+                        await contract.deploymentTransaction().wait();
+                        log(`[SUCCESS] Governance Address: ${await contract.getAddress()}`, "text-emerald-400");
+                    } catch (e) { log("[FAILED] Governance", "text-red-500"); }
+                }
+
+                // 8. Proxy Contract
+                if (document.getElementById('doProxy').checked) {
+                    try {
+                        log("[FACTORY] Deploying Upgradeable Proxy Contract...", "text-cyan-400 font-bold");
+                        const factory = new ethers.ContractFactory(["constructor()"], BYTECODES.PROXY, signer);
+                        const contract = await factory.deploy();
+                        await contract.deploymentTransaction().wait();
+                        log(`[SUCCESS] Proxy Address: ${await contract.getAddress()}`, "text-emerald-400");
+                    } catch (e) { log("[FAILED] Proxy Deployment", "text-red-500"); }
                 }
             }
-            log("=== ALL TASKS FINISHED ===", "text-blue-500 font-black italic");
+            log("=== ALL TARGET MODULES EXECUTED ===", "text-blue-500 font-black italic text-center mt-4 block");
         }
 
         document.getElementById('connectBtn').onclick = connect;
