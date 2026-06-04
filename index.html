@@ -3,58 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Alpha Farmer v16.0</title>
+    <title>Web3 Alpha Farmer v18.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#0b0f1a] text-slate-300 font-sans">
+<body class="bg-[#05070a] text-slate-300 font-sans">
 
     <div class="max-w-6xl mx-auto p-4 md:p-8">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-2xl">
+        <div class="flex justify-between items-center mb-8 bg-slate-900/50 p-6 rounded-3xl border border-slate-800 shadow-2xl backdrop-blur-md">
             <div>
-                <h1 class="text-2xl font-black text-white tracking-tight uppercase italic">Web3 <span class="text-blue-500">Ultimate</span> v16</h1>
-                <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-[0.3em]">Multi-Contract Logic: ERC20, SBT, GN/GM</p>
+                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic">Web3 <span class="text-blue-500">Protocol</span> v18</h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest">On-Chain Messaging & Diversity Engine</p>
             </div>
-            <div class="flex flex-col items-end">
-                <button id="connectBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-bold transition-all">Connect Wallet</button>
-                <span id="walletAddr" class="text-[10px] font-mono mt-2 text-slate-500 italic">Not connected</span>
+            <div class="text-right">
+                <button id="connectBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-900/20">Connect Wallet</button>
+                <div id="walletAddr" class="text-[10px] text-slate-600 mt-1 font-mono italic">Not Authorized</div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-5 space-y-6">
-                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                    <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">Deploy Settings</h3>
-                    <div class="space-y-4">
-                        <select id="networkSelect" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none text-white text-sm">
-                            <option value="21894">DAC Testnet</option>
-                            <option value="11155111">Sepolia</option>
-                            <option value="59141">Linea</option>
-                            <option value="84532">Base</option>
-                        </select>
-                        
-                        <div class="space-y-2">
-                            <label class="flex items-center space-x-3 p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-blue-500 cursor-pointer">
-                                <input type="checkbox" id="deployGM" checked class="w-4 h-4 accent-green-500">
-                                <span class="text-xs font-bold uppercase">Deploy GM/GN Meme Token (Burnable)</span>
-                            </label>
-                            <label class="flex items-center space-x-3 p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-amber-500 cursor-pointer">
-                                <input type="checkbox" id="deploySBT" checked class="w-4 h-4 accent-amber-500">
-                                <span class="text-xs font-bold uppercase">Deploy Soulbound NFT (Non-transferable)</span>
-                            </label>
-                        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-4 space-y-4">
+                <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
+                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest">Action Modules</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center justify-between p-3 bg-slate-800/50 rounded-2xl border border-transparent hover:border-blue-500/50 cursor-pointer transition-all">
+                            <span class="text-xs font-bold uppercase">Send "GM" Message</span>
+                            <input type="checkbox" id="doGM" checked class="w-4 h-4 accent-blue-500">
+                        </label>
+                        <label class="flex items-center justify-between p-3 bg-slate-800/50 rounded-2xl border border-transparent hover:border-indigo-500/50 cursor-pointer transition-all">
+                            <span class="text-xs font-bold uppercase">Send "GN" Message</span>
+                            <input type="checkbox" id="doGN" checked class="w-4 h-4 accent-indigo-500">
+                        </label>
+                        <label class="flex items-center justify-between p-3 bg-slate-800/50 rounded-2xl border border-transparent hover:border-amber-500/50 cursor-pointer transition-all">
+                            <span class="text-xs font-bold uppercase">Deploy Standard ERC-20</span>
+                            <input type="checkbox" id="doERC20" checked class="w-4 h-4 accent-amber-500">
+                        </label>
+                        <label class="flex items-center justify-between p-3 bg-slate-800/50 rounded-2xl border border-transparent hover:border-purple-500/50 cursor-pointer transition-all">
+                            <span class="text-xs font-bold uppercase">Deploy NFT Collection</span>
+                            <input type="checkbox" id="doNFT" checked class="w-4 h-4 accent-purple-500">
+                        </label>
                     </div>
+                </div>
+
+                <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
+                    <label class="text-[10px] text-slate-500 uppercase block mb-2">Target Network</label>
+                    <select id="networkSelect" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-xs font-bold text-white outline-none">
+                        <option value="21894">DAC Testnet</option>
+                        <option value="11155111">Sepolia</option>
+                        <option value="59141">Linea Sepolia</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="lg:col-span-7 space-y-6">
-                <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:brightness-110 rounded-2xl font-black text-xl text-white shadow-xl transition-all uppercase tracking-widest">
-                    INITIALIZE ALPHA DEPLOY
+            <div class="lg:col-span-8 space-y-6">
+                <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:brightness-110 text-white rounded-3xl font-black text-xl shadow-xl transition-all uppercase tracking-widest">
+                    Execute Multi-Action Protocol
                 </button>
 
-                <div class="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
-                    <div id="log" class="p-5 h-[480px] overflow-y-auto font-mono text-[10px] leading-relaxed space-y-1 bg-[#05070a]">
-                        <div class="text-slate-600 italic">> Ready for deployment...</div>
+                <div class="bg-[#080b12] rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
+                    <div class="bg-slate-900/80 px-6 py-4 border-b border-slate-800 flex justify-between items-center">
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Blockchain Interaction Log</span>
+                        <button onclick="document.getElementById('log').innerHTML=''" class="text-[10px] text-blue-500 uppercase font-bold">Clear</button>
+                    </div>
+                    <div id="log" class="p-6 h-[420px] overflow-y-auto font-mono text-[11px] leading-relaxed space-y-2">
+                        <div class="text-slate-600 italic">> System Idle. Connect wallet to initiate...</div>
                     </div>
                 </div>
             </div>
@@ -62,16 +74,12 @@
     </div>
 
     <script>
-        let provider, signer;
+        let provider, signer, myAddr;
 
-        // GM/GN Meme Token (Burnable)
-        const GM_TOKEN_CODE = "0x608060405234801561001057600080fd5b5060405161023a38038061023a83398101604081905261002c91906100a5565b806000806101000a81548160ff0219169083151502179055503360016000338152602081927f000000000000000000000000000000000000000000000000000000000000000055";
-        
-        // Soulbound NFT (Simple SBT)
-        const SBT_CODE = "0x608060405234801561001057600080fd5b506040516102603803806102608339810160405261002a91906100bd565b336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff1602179055505b6100c856";
-
-        const ERC20_ABI = ["constructor(string name, string symbol, uint256 supply)"];
-        const SBT_ABI = ["constructor(string name, string symbol)"];
+        const BYTECODES = {
+            ERC20: "0x608060405234801561001057600080fd5b5060405161023a38038061023a83398101604081905261002c91906100a5565b806000806101000a81548160ff0219169083151502179055503360016000338152602081927f000000000000000000000000000000000000000000000000000000000000000055",
+            NFT: "0x608060405234801561001057600080fd5b506040516102603803806102608339810160405261002a91906100bd565b336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505b6100c856"
+        };
 
         function log(msg, color = "text-slate-400") {
             const div = document.getElementById('log');
@@ -80,39 +88,67 @@
         }
 
         async function connect() {
-            if (!window.ethereum) return alert("Install MetaMask");
+            if (!window.ethereum) return alert("MetaMask not found");
             provider = new ethers.BrowserProvider(window.ethereum);
             signer = await provider.getSigner();
-            document.getElementById('walletAddr').innerText = await signer.getAddress();
-            log("Connected to " + (await provider.getNetwork()).name, "text-blue-400 font-bold");
+            myAddr = await signer.getAddress();
+            document.getElementById('walletAddr').innerText = myAddr;
+            log("AUTHORIZED: " + myAddr.substring(0,20) + "...", "text-blue-400 font-bold");
+        }
+
+        // Function to send text message to blockchain
+        async function sendOnChainMessage(text, colorClass) {
+            try {
+                const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(text));
+                log(`MESSAGE: Sending "${text}" to blockchain...`, colorClass);
+                
+                const tx = await signer.sendTransaction({
+                    to: myAddr, // Sending to self to save gas and record message
+                    value: 0,
+                    data: hexMessage
+                });
+                
+                await tx.wait();
+                log(`[SUCCESS] Message recorded! Hash: ${tx.hash.substring(0,15)}...`, "text-emerald-400");
+            } catch (e) {
+                log(`[FAILED] Message failed: ${e.reason || 'User rejected'}`, "text-red-500");
+            }
+        }
+
+        async function deploy(type, args, color) {
+            try {
+                log(`DEPLOY: Launching ${type} Contract...`, color);
+                const factory = new ethers.ContractFactory(["constructor(string name, string symbol, uint256 supply)"], BYTECODES[type] || BYTECODES.ERC20, signer);
+                const contract = await factory.deploy(...args);
+                await contract.deploymentTransaction().wait();
+                log(`[SUCCESS] ${type} at ${await contract.getAddress()}`, "text-emerald-400 font-bold");
+            } catch (e) { log("[FAILED] Deployment error", "text-red-500"); }
         }
 
         async function startMachine() {
             if (!signer) await connect();
-            
-            // 1. GM/GN Token Deploy
-            if (document.getElementById('deployGM').checked) {
-                try {
-                    log("Deploying GM/GN Meme Token...", "text-green-500");
-                    const factory = new ethers.ContractFactory(ERC20_ABI, GM_TOKEN_CODE, signer);
-                    const contract = await factory.deploy("Good Morning", "GM", ethers.parseEther("1000000000"));
-                    await contract.deploymentTransaction().wait();
-                    log(`[SUCCESS] GM Token at: ${await contract.getAddress()}`, "text-emerald-400 font-bold");
-                } catch (e) { log("[FAILED] GM Deploy", "text-red-500"); }
+
+            // Action: GM Message
+            if (document.getElementById('doGM').checked) {
+                await sendOnChainMessage("GM (Good Morning)", "text-blue-400");
             }
 
-            // 2. SBT Deploy
-            if (document.getElementById('deploySBT').checked) {
-                try {
-                    log("Deploying Soulbound Collection...", "text-amber-500");
-                    const factory = new ethers.ContractFactory(SBT_ABI, SBT_CODE, signer);
-                    const contract = await factory.deploy("Alpha Identity", "AID");
-                    await contract.deploymentTransaction().wait();
-                    log(`[SUCCESS] SBT Collection at: ${await contract.getAddress()}`, "text-emerald-400 font-bold");
-                } catch (e) { log("[FAILED] SBT Deploy", "text-red-500"); }
+            // Action: GN Message
+            if (document.getElementById('doGN').checked) {
+                await sendOnChainMessage("GN (Good Night)", "text-indigo-400");
             }
-            
-            log("--- ALL TASKS FINISHED ---", "text-blue-500 font-bold");
+
+            // Action: ERC-20
+            if (document.getElementById('doERC20').checked) {
+                await deploy("ERC20", ["Farmer Token", "FARM", ethers.parseEther("1000")], "text-amber-500");
+            }
+
+            // Action: NFT
+            if (document.getElementById('doNFT').checked) {
+                await deploy("NFT", ["Alpha Collection", "ALP"], "text-purple-500");
+            }
+
+            log("--- ALL ACTIONS COMPLETED ---", "text-blue-500 font-black italic");
         }
 
         document.getElementById('connectBtn').onclick = connect;
