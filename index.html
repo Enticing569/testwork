@@ -3,51 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Alpha Farmer v18.0</title>
+    <title>Web3 Alpha Farmer v19.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#05070a] text-slate-300 font-sans">
+<body class="bg-[#030508] text-slate-300 font-sans">
 
     <div class="max-w-6xl mx-auto p-4 md:p-8">
-        <div class="flex justify-between items-center mb-8 bg-slate-900/50 p-6 rounded-3xl border border-slate-800 shadow-2xl backdrop-blur-md">
+        <div class="flex justify-between items-center mb-8 bg-slate-900/40 p-6 rounded-3xl border border-slate-800 shadow-2xl">
             <div>
-                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic">Web3 <span class="text-blue-500">Protocol</span> v18</h1>
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest">On-Chain Messaging & Diversity Engine</p>
+                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic">Web3 <span class="text-blue-500">Diversity</span> v19</h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest">Independent Multi-Action Engine</p>
             </div>
             <div class="text-right">
-                <button id="connectBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-900/20">Connect Wallet</button>
-                <div id="walletAddr" class="text-[10px] text-slate-600 mt-1 font-mono italic">Not Authorized</div>
+                <button id="connectBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-xl font-bold text-sm transition-all">Connect Wallet</button>
+                <div id="walletAddr" class="text-[10px] text-slate-600 mt-1 font-mono italic">Not Connected</div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-4 space-y-4">
-                <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
-                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest">Action Modules</h3>
+                <div class="bg-slate-900/60 p-6 rounded-3xl border border-slate-800">
+                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic underline decoration-blue-500">Select Independent Actions</h3>
                     <div class="space-y-3">
-                        <label class="flex items-center justify-between p-3 bg-slate-800/50 rounded-2xl border border-transparent hover:border-blue-500/50 cursor-pointer transition-all">
-                            <span class="text-xs font-bold uppercase">Send "GM" Message</span>
+                        <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-red-500/50 cursor-pointer transition-all">
+                            <span class="text-xs font-bold uppercase">1. Native Coin Transfer</span>
+                            <input type="checkbox" id="doNative" checked class="w-4 h-4 accent-red-500">
+                        </label>
+                        <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-blue-500/50 cursor-pointer transition-all">
+                            <span class="text-xs font-bold uppercase">2. On-Chain "GM" Message</span>
                             <input type="checkbox" id="doGM" checked class="w-4 h-4 accent-blue-500">
                         </label>
-                        <label class="flex items-center justify-between p-3 bg-slate-800/50 rounded-2xl border border-transparent hover:border-indigo-500/50 cursor-pointer transition-all">
-                            <span class="text-xs font-bold uppercase">Send "GN" Message</span>
+                        <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-indigo-500/50 cursor-pointer transition-all">
+                            <span class="text-xs font-bold uppercase">3. On-Chain "GN" Message</span>
                             <input type="checkbox" id="doGN" checked class="w-4 h-4 accent-indigo-500">
                         </label>
-                        <label class="flex items-center justify-between p-3 bg-slate-800/50 rounded-2xl border border-transparent hover:border-amber-500/50 cursor-pointer transition-all">
-                            <span class="text-xs font-bold uppercase">Deploy Standard ERC-20</span>
+                        <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-amber-500/50 cursor-pointer transition-all">
+                            <span class="text-xs font-bold uppercase">4. Deploy ERC-20 Token</span>
                             <input type="checkbox" id="doERC20" checked class="w-4 h-4 accent-amber-500">
                         </label>
-                        <label class="flex items-center justify-between p-3 bg-slate-800/50 rounded-2xl border border-transparent hover:border-purple-500/50 cursor-pointer transition-all">
-                            <span class="text-xs font-bold uppercase">Deploy NFT Collection</span>
+                        <label class="flex items-center justify-between p-3 bg-slate-800/40 rounded-xl border border-transparent hover:border-purple-500/50 cursor-pointer transition-all">
+                            <span class="text-xs font-bold uppercase">5. Deploy NFT Collection</span>
                             <input type="checkbox" id="doNFT" checked class="w-4 h-4 accent-purple-500">
                         </label>
                     </div>
                 </div>
 
-                <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
-                    <label class="text-[10px] text-slate-500 uppercase block mb-2">Target Network</label>
-                    <select id="networkSelect" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-xs font-bold text-white outline-none">
+                <div class="p-2">
+                    <select id="networkSelect" class="w-full bg-slate-900 border border-slate-800 p-3 rounded-xl text-xs font-bold text-white outline-none">
                         <option value="21894">DAC Testnet</option>
                         <option value="11155111">Sepolia</option>
                         <option value="59141">Linea Sepolia</option>
@@ -56,17 +59,17 @@
             </div>
 
             <div class="lg:col-span-8 space-y-6">
-                <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:brightness-110 text-white rounded-3xl font-black text-xl shadow-xl transition-all uppercase tracking-widest">
-                    Execute Multi-Action Protocol
+                <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:scale-[1.01] active:scale-[0.99] text-white rounded-3xl font-black text-xl shadow-xl transition-all uppercase tracking-widest">
+                    Run Diversity Protocol
                 </button>
 
                 <div class="bg-[#080b12] rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
-                    <div class="bg-slate-900/80 px-6 py-4 border-b border-slate-800 flex justify-between items-center">
-                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Blockchain Interaction Log</span>
-                        <button onclick="document.getElementById('log').innerHTML=''" class="text-[10px] text-blue-500 uppercase font-bold">Clear</button>
+                    <div class="bg-slate-900/80 px-6 py-4 border-b border-slate-800 flex justify-between items-center text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                        Live Blockchain Monitor
+                        <button onclick="document.getElementById('log').innerHTML=''" class="text-blue-500">Clear</button>
                     </div>
                     <div id="log" class="p-6 h-[420px] overflow-y-auto font-mono text-[11px] leading-relaxed space-y-2">
-                        <div class="text-slate-600 italic">> System Idle. Connect wallet to initiate...</div>
+                        <div class="text-slate-600 italic">> Systems stand-by...</div>
                     </div>
                 </div>
             </div>
@@ -88,67 +91,73 @@
         }
 
         async function connect() {
-            if (!window.ethereum) return alert("MetaMask not found");
+            if (!window.ethereum) return alert("Install MetaMask");
             provider = new ethers.BrowserProvider(window.ethereum);
             signer = await provider.getSigner();
             myAddr = await signer.getAddress();
             document.getElementById('walletAddr').innerText = myAddr;
-            log("AUTHORIZED: " + myAddr.substring(0,20) + "...", "text-blue-400 font-bold");
-        }
-
-        // Function to send text message to blockchain
-        async function sendOnChainMessage(text, colorClass) {
-            try {
-                const hexMessage = ethers.hexlify(ethers.toUtf8Bytes(text));
-                log(`MESSAGE: Sending "${text}" to blockchain...`, colorClass);
-                
-                const tx = await signer.sendTransaction({
-                    to: myAddr, // Sending to self to save gas and record message
-                    value: 0,
-                    data: hexMessage
-                });
-                
-                await tx.wait();
-                log(`[SUCCESS] Message recorded! Hash: ${tx.hash.substring(0,15)}...`, "text-emerald-400");
-            } catch (e) {
-                log(`[FAILED] Message failed: ${e.reason || 'User rejected'}`, "text-red-500");
-            }
-        }
-
-        async function deploy(type, args, color) {
-            try {
-                log(`DEPLOY: Launching ${type} Contract...`, color);
-                const factory = new ethers.ContractFactory(["constructor(string name, string symbol, uint256 supply)"], BYTECODES[type] || BYTECODES.ERC20, signer);
-                const contract = await factory.deploy(...args);
-                await contract.deploymentTransaction().wait();
-                log(`[SUCCESS] ${type} at ${await contract.getAddress()}`, "text-emerald-400 font-bold");
-            } catch (e) { log("[FAILED] Deployment error", "text-red-500"); }
+            log("WALLET READY: " + myAddr.substring(0,20) + "...", "text-blue-400 font-bold");
         }
 
         async function startMachine() {
             if (!signer) await connect();
 
-            // Action: GM Message
+            // 1. NATIVE TRANSFER
+            if (document.getElementById('doNative').checked) {
+                try {
+                    const randomAddr = ethers.Wallet.createRandom().address;
+                    log(`ACTION: Native Transfer to ${randomAddr.substring(0,10)}...`, "text-red-400");
+                    const tx = await signer.sendTransaction({ to: randomAddr, value: ethers.parseEther("0.0000001") });
+                    await tx.wait();
+                    log(`[SUCCESS] Transfer: ${tx.hash.substring(0,15)}...`, "text-emerald-400");
+                } catch (e) { log("[FAILED] Native Transfer", "text-red-500"); }
+            }
+
+            // 2. GM MESSAGE
             if (document.getElementById('doGM').checked) {
-                await sendOnChainMessage("GM (Good Morning)", "text-blue-400");
+                try {
+                    const hex = ethers.hexlify(ethers.toUtf8Bytes("Good Morning Alpha"));
+                    log(`ACTION: Writing "GM" to Blockchain...`, "text-blue-400");
+                    const tx = await signer.sendTransaction({ to: myAddr, data: hex });
+                    await tx.wait();
+                    log(`[SUCCESS] GM Recorded!`, "text-emerald-400");
+                } catch (e) { log("[FAILED] GM Message", "text-red-500"); }
             }
 
-            // Action: GN Message
+            // 3. GN MESSAGE
             if (document.getElementById('doGN').checked) {
-                await sendOnChainMessage("GN (Good Night)", "text-indigo-400");
+                try {
+                    const hex = ethers.hexlify(ethers.toUtf8Bytes("Good Night Alpha"));
+                    log(`ACTION: Writing "GN" to Blockchain...`, "text-indigo-400");
+                    const tx = await signer.sendTransaction({ to: myAddr, data: hex });
+                    await tx.wait();
+                    log(`[SUCCESS] GN Recorded!`, "text-emerald-400");
+                } catch (e) { log("[FAILED] GN Message", "text-red-500"); }
             }
 
-            // Action: ERC-20
+            // 4. ERC-20 DEPLOY
             if (document.getElementById('doERC20').checked) {
-                await deploy("ERC20", ["Farmer Token", "FARM", ethers.parseEther("1000")], "text-amber-500");
+                try {
+                    log("ACTION: Deploying Real ERC-20 Token...", "text-amber-500");
+                    const factory = new ethers.ContractFactory(["constructor(string n, string s, uint256 su)"], BYTECODES.ERC20, signer);
+                    const contract = await factory.deploy("Diversity Token", "DIV", ethers.parseEther("1000"));
+                    await contract.deploymentTransaction().wait();
+                    log(`[SUCCESS] Token at: ${await contract.getAddress()}`, "text-emerald-400 font-bold");
+                } catch (e) { log("[FAILED] ERC-20 Deploy", "text-red-500"); }
             }
 
-            // Action: NFT
+            // 5. NFT DEPLOY
             if (document.getElementById('doNFT').checked) {
-                await deploy("NFT", ["Alpha Collection", "ALP"], "text-purple-500");
+                try {
+                    log("ACTION: Deploying Real NFT Collection...", "text-purple-500");
+                    const factory = new ethers.ContractFactory(["constructor(string n, string s)"], BYTECODES.NFT, signer);
+                    const contract = await factory.deploy("Diversity Collection", "DIVX");
+                    await contract.deploymentTransaction().wait();
+                    log(`[SUCCESS] NFT at: ${await contract.getAddress()}`, "text-emerald-400 font-bold");
+                } catch (e) { log("[FAILED] NFT Deploy", "text-red-500"); }
             }
 
-            log("--- ALL ACTIONS COMPLETED ---", "text-blue-500 font-black italic");
+            log("--- PROTOCOL FINISHED ---", "text-blue-500 font-black");
         }
 
         document.getElementById('connectBtn').onclick = connect;
