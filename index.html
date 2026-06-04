@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Alpha Farmer v8.0</title>
+    <title>Web3 Alpha Farmer v9.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .hidden-element { display: none; }
     </style>
 </head>
 <body class="bg-[#0b0f1a] text-slate-300 font-sans">
@@ -17,21 +18,21 @@
     <div class="max-w-6xl mx-auto p-4 md:p-8">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-2xl">
             <div>
-                <h1 class="text-2xl font-black text-white tracking-tight uppercase">Web3 <span class="text-blue-500">Master Tool</span></h1>
-                <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-[0.3em]">Randomized Contracts & Smart Amount</p>
+                <h1 class="text-2xl font-black text-white tracking-tight uppercase italic">Web3 <span class="text-blue-500">Ultimate</span> v9</h1>
+                <p class="text-[10px] text-slate-500 mt-1 uppercase tracking-[0.3em]">Full Random or Precise Control</p>
             </div>
             <div class="flex flex-col items-end">
                 <button id="connectBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-blue-900/20">
                     Connect Wallet
                 </button>
-                <span id="walletAddr" class="text-[10px] font-mono mt-2 text-slate-500">Not connected</span>
+                <span id="walletAddr" class="text-[10px] font-mono mt-2 text-slate-500 italic">Not connected</span>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-5 space-y-6">
-                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                    <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">1. Настройки</h3>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+                    <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">1. Конфигурация</h3>
                     <div class="space-y-4">
                         <select id="networkSelect" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none text-white text-sm">
                             <option value="11155111">Ethereum Sepolia</option>
@@ -40,41 +41,49 @@
                             <option value="84532">Base Sepolia</option>
                             <option value="80002">Polygon Amoy</option>
                         </select>
+                        
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="text-[10px] text-slate-500 uppercase ml-1">Циклы</label>
                                 <input id="targetCount" type="number" value="5" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none text-white">
                             </div>
                             <div>
-                                <label class="text-[10px] text-slate-500 uppercase ml-1">Сумма (Base)</label>
-                                <input id="nativeAmount" type="text" value="0.00000001" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none text-white font-mono text-xs">
+                                <label class="text-[10px] text-slate-500 uppercase ml-1">Тип суммы</label>
+                                <select id="amountMode" onchange="toggleAmountInput()" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none text-blue-400 text-xs font-bold">
+                                    <option value="random">Auto Random</option>
+                                    <option value="manual">Manual Set</option>
+                                </select>
                             </div>
                         </div>
-                        <p class="text-[9px] text-slate-500 italic px-1">* Последняя цифра суммы будет заменена на рандомную (1-9) для каждой транзакции.</p>
+
+                        <div id="manualInputBlock" class="hidden-element">
+                            <label class="text-[10px] text-slate-500 uppercase ml-1">Ваша сумма (ETH/MATIC)</label>
+                            <input id="nativeAmount" type="text" value="0.001" class="w-full bg-slate-800 border border-amber-900/50 p-3 rounded-xl outline-none text-white font-mono">
+                        </div>
                     </div>
                 </div>
 
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
                     <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">2. Активности</h3>
                     <div class="space-y-3 mb-4">
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800/40 hover:bg-slate-800 rounded-xl transition border border-transparent hover:border-blue-900/50">
+                        <label class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800/40 hover:bg-slate-800 rounded-xl transition border border-transparent hover:border-blue-500">
                             <input type="checkbox" id="doNative" checked class="w-5 h-5 accent-blue-500">
-                            <span class="text-sm font-bold">Рассылка Native</span>
+                            <span class="text-sm font-bold">Native Transfer</span>
                         </label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800/40 hover:bg-slate-800 rounded-xl transition border border-transparent hover:border-amber-900/50">
+                        <label class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800/40 hover:bg-slate-800 rounded-xl transition border border-transparent hover:border-amber-500">
                             <input type="checkbox" id="doERC20" checked class="w-5 h-5 accent-amber-500">
                             <span class="text-sm font-bold">Deploy Unique ERC-20</span>
                         </label>
-                        <label class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800/40 hover:bg-slate-800 rounded-xl transition border border-transparent hover:border-purple-900/50">
+                        <label class="flex items-center space-x-3 cursor-pointer p-3 bg-slate-800/40 hover:bg-slate-800 rounded-xl transition border border-transparent hover:border-purple-500">
                             <input type="checkbox" id="doNFT" checked class="w-5 h-5 accent-purple-500">
                             <span class="text-sm font-bold">Deploy Unique NFT Collection</span>
                         </label>
                     </div>
 
-                    <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl">
-                        <label class="text-[10px] font-bold text-slate-500 uppercase mb-2 block tracking-widest">Режим работы:</label>
-                        <select id="distributionMode" class="w-full bg-transparent text-blue-400 text-xs font-bold outline-none cursor-pointer">
-                            <option value="airdrop">Deploy + AirDrop (Рассылка)</option>
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase mb-2 block tracking-widest text-center">Режим AirDrop</label>
+                        <select id="distributionMode" class="w-full bg-transparent text-blue-400 text-xs font-black outline-none cursor-pointer text-center">
+                            <option value="airdrop">Deploy + Рассылка на рандомные адреса</option>
                             <option value="onlyDeploy">Deploy Only (Оставить себе)</option>
                         </select>
                     </div>
@@ -82,27 +91,27 @@
             </div>
 
             <div class="lg:col-span-7 space-y-6">
-                <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-br from-blue-600 to-purple-700 hover:scale-[1.01] active:scale-[0.99] rounded-2xl font-black text-xl text-white shadow-2xl transition-all uppercase tracking-[0.2em]">
-                    Запустить алгоритм
+                <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 rounded-2xl font-black text-xl text-white shadow-xl shadow-blue-900/40 transform active:scale-[0.98] transition-all uppercase tracking-widest">
+                    ЗАПУСТИТЬ МАШИНУ
                 </button>
 
-                <div id="progressBox" class="hidden bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-inner">
+                <div id="progressBox" class="hidden bg-slate-900 p-6 rounded-2xl border border-slate-800">
                     <div class="flex justify-between items-center mb-3">
-                        <span id="currentAction" class="text-xs font-bold text-blue-400 uppercase italic">Подготовка...</span>
+                        <span id="currentAction" class="text-xs font-bold text-blue-400 uppercase italic">Инициализация...</span>
                         <span id="progressText" class="text-sm font-black text-white">0%</span>
                     </div>
                     <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                        <div id="progressBar" class="bg-blue-500 h-full w-0 transition-all duration-700 shadow-[0_0_10px_#3b82f6]"></div>
+                        <div id="progressBar" class="bg-blue-500 h-full w-0 transition-all duration-700 shadow-[0_0_15px_#3b82f6]"></div>
                     </div>
                 </div>
 
                 <div class="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
                     <div class="bg-slate-900/80 px-4 py-3 border-b border-slate-800 flex justify-between items-center">
-                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-tighter">Terminal Output</span>
-                        <button onclick="document.getElementById('log').innerHTML=''" class="text-[10px] text-blue-500 hover:text-blue-300">Flush</button>
+                        <span class="text-[10px] font-black text-slate-500 uppercase">Live Output</span>
+                        <button onclick="document.getElementById('log').innerHTML=''" class="text-[10px] text-blue-500 hover:text-blue-300">Clear</button>
                     </div>
-                    <div id="log" class="p-5 h-[380px] overflow-y-auto font-mono text-[10px] leading-relaxed space-y-1 bg-[#05070a]">
-                        <div class="text-slate-600 italic">> Инициализация... Подключите кошелек.</div>
+                    <div id="log" class="p-5 h-[410px] overflow-y-auto font-mono text-[10px] leading-relaxed space-y-1 bg-[#05070a]">
+                        <div class="text-slate-600 italic">> System ready. Connect wallet...</div>
                     </div>
                 </div>
             </div>
@@ -112,10 +121,10 @@
     <script>
         let provider, signer, currentAddress;
 
-        // Генератор уникальных данных
-        const prefixes = ["Cyber", "Neon", "Meta", "Nova", "Void", "Zen", "Hyper", "Aura", "Eco", "Bit", "Luna", "Solar"];
-        const cores = ["Node", "Nexus", "Link", "Sync", "Chain", "Sphere", "Pulse", "Grid", "Flow", "Core", "Verse"];
-        const suffixes = ["Labs", "DAO", "Protocol", "Network", "Finance", "NFT", "Swap", "Asset", "Vault", "System"];
+        // Генерация имен
+        const prefixes = ["Cyber", "Neon", "Meta", "Nova", "Void", "Zen", "Hyper", "Aura", "Eco", "Bit", "Luna", "Solar", "Flux", "Omega", "Titan"];
+        const cores = ["Node", "Nexus", "Link", "Sync", "Chain", "Sphere", "Pulse", "Grid", "Flow", "Core", "Verse", "Data", "Matrix"];
+        const suffixes = ["Labs", "DAO", "Protocol", "Network", "Finance", "NFT", "Swap", "Asset", "Vault", "System", "Cloud", "Forge"];
 
         function generateUniqueName() {
             const p = prefixes[Math.floor(Math.random() * prefixes.length)];
@@ -138,6 +147,12 @@
         const erc20Byte = "0x608060405234801561001057600080fd5b5060405161023a38038061023a83398101604081905261002c91906100a5565b806000806101000a81548160ff0219169083151502179055503360016000338152602081927f000000000000000000000000000000000000000000000000000000000000000055";
         const erc721Abi = ["constructor(string name, string symbol)", "function mint(address to, uint256 tokenId) public"];
         const erc721Byte = "0x608060405234801561001057600080fd5b506040516102603803806102608339810160405261002a91906100bd565b336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505b6100c856";
+
+        function toggleAmountInput() {
+            const mode = document.getElementById('amountMode').value;
+            const block = document.getElementById('manualInputBlock');
+            block.style.display = (mode === 'manual') ? 'block' : 'none';
+        }
 
         function log(msg, color = "text-slate-400") {
             const div = document.getElementById('log');
@@ -170,91 +185,95 @@
             signer = await provider.getSigner();
             currentAddress = await signer.getAddress();
             document.getElementById('walletAddr').innerText = currentAddress;
-            log("Кошелек готов: " + currentAddress, "text-blue-400 font-bold");
+            log("Connected: " + currentAddress, "text-blue-400 font-bold");
         }
 
         async function startMachine() {
             if (!signer) await connect();
             
             const cycles = parseInt(document.getElementById('targetCount').value);
-            const baseAmount = document.getElementById('nativeAmount').value;
+            const amtMode = document.getElementById('amountMode').value;
+            const manualAmt = document.getElementById('nativeAmount').value;
             const doNative = document.getElementById('doNative').checked;
             const doERC20 = document.getElementById('doERC20').checked;
             const doNFT = document.getElementById('doNFT').checked;
-            const mode = document.getElementById('distributionMode').value;
+            const distMode = document.getElementById('distributionMode').value;
 
             document.getElementById('progressBox').classList.remove('hidden');
             document.getElementById('startBtn').disabled = true;
-            log("🚀 ЗАПУСК АВТОМАТИЗАЦИИ", "text-white font-bold bg-blue-600 px-3 py-1 rounded w-fit");
+            log("🚀 STARTING WEB3 FARMER V9", "text-white font-bold bg-blue-600 px-3 py-1 rounded w-fit");
 
             for (let i = 1; i <= cycles; i++) {
                 const progress = (i / cycles) * 100;
                 document.getElementById('progressBar').style.width = progress + '%';
                 document.getElementById('progressText').innerText = Math.round(progress) + '%';
                 
-                log(`--- СЛОТ #${i} ---`, "text-slate-100 mt-4 border-l-2 border-blue-500 pl-2");
+                log(`--- ITERATION ${i} OF ${cycles} ---`, "text-slate-100 mt-4 border-l-2 border-indigo-500 pl-2");
                 const randomTarget = ethers.Wallet.createRandom().address;
 
-                // 1. NATIVE (SMART RANDOM)
+                // 1. NATIVE
                 if (doNative) {
-                    document.getElementById('currentAction').innerText = "Native Send...";
-                    // Берем базу и меняем последнюю цифру
-                    const randomDigit = Math.floor(Math.random() * 9) + 1;
-                    const finalAmount = baseAmount.slice(0, -1) + randomDigit;
+                    document.getElementById('currentAction').innerText = "Sending Native...";
+                    let finalAmount;
+                    if (amtMode === 'random') {
+                        finalAmount = "0.0000000" + (Math.floor(Math.random() * 9) + 1);
+                    } else {
+                        finalAmount = manualAmt;
+                    }
                     
                     try {
                         const tx = await signer.sendTransaction({ to: randomTarget, value: ethers.parseEther(finalAmount) });
-                        log(`NATIVE: ${finalAmount} ETH -> ${randomTarget.substring(0,14)}...`, "text-emerald-400");
+                        log(`NATIVE: Sent ${finalAmount} to ${randomTarget.substring(0,14)}...`, "text-emerald-400");
                         await tx.wait();
-                    } catch (e) { log("NATIVE ERROR", "text-red-500"); }
+                    } catch (e) { log("NATIVE ERROR: " + e.message.substring(0,30), "text-red-500"); }
                 }
 
-                // 2. ERC-20 (UNIQUE)
+                // 2. ERC-20
                 if (doERC20) {
                     document.getElementById('currentAction').innerText = "Deploying Token...";
                     const { name, symbol } = generateUniqueName();
                     try {
-                        log(`ERC-20: Создание ${name} (${symbol})...`, "text-amber-500");
+                        log(`ERC-20: Creating ${name}...`, "text-amber-500");
                         const factory = new ethers.ContractFactory(erc20Abi, erc20Byte, signer);
-                        const supply = ethers.parseEther((Math.floor(Math.random() * 900000) + 100000).toString());
+                        const supply = ethers.parseEther((Math.floor(Math.random() * 500000) + 100000).toString());
                         const contract = await factory.deploy(name, symbol, supply);
                         await contract.waitForDeployment();
                         const addr = await contract.getAddress();
-                        log(`ERC-20: Создан: ${addr.substring(0,15)}...`, "text-amber-400 text-[9px]");
+                        log(`ERC-20: Created at ${addr.substring(0,18)}...`, "text-amber-400 font-bold");
 
-                        if (mode === 'airdrop') {
-                            const tx = await contract.transfer(randomTarget, ethers.parseEther("100"));
+                        if (distMode === 'airdrop') {
+                            const tx = await contract.transfer(randomTarget, ethers.parseEther("10"));
                             await tx.wait();
-                            log(`ERC-20: Токены разосланы.`, "text-emerald-500 text-[9px]");
+                            log(`ERC-20: Sent 10 ${symbol} to random address.`, "text-emerald-500");
                         }
                     } catch (e) { log("ERC-20 ERROR", "text-red-500"); }
                 }
 
-                // 3. NFT (UNIQUE)
+                // 3. NFT
                 if (doNFT) {
-                    document.getElementById('currentAction').innerText = "Deploying NFT...";
+                    document.getElementById('currentAction').innerText = "Deploying NFT Collection...";
                     const { name, symbol } = generateUniqueName();
                     try {
-                        log(`ERC-721: Коллекция ${name}...`, "text-purple-500");
+                        log(`ERC-721: Collection ${name}...`, "text-purple-500");
                         const factory = new ethers.ContractFactory(erc721Abi, erc721Byte, signer);
                         const contract = await factory.deploy(name + " NFT", symbol);
                         await contract.waitForDeployment();
                         const addr = await contract.getAddress();
-                        log(`ERC-721: Создан: ${addr.substring(0,15)}...`, "text-purple-400 text-[9px]");
+                        log(`ERC-721: Created at ${addr.substring(0,18)}...`, "text-purple-400 font-bold");
 
-                        if (mode === 'airdrop') {
+                        if (distMode === 'airdrop') {
                             const tx = await contract.mint(randomTarget, 1);
                             await tx.wait();
-                            log(`ERC-721: NFT минт выполнен.`, "text-emerald-500 text-[9px]");
+                            log(`ERC-721: NFT minted to random address.`, "text-emerald-500");
                         }
                     } catch (e) { log("NFT ERROR", "text-red-500"); }
                 }
             }
 
-            document.getElementById('currentAction').innerText = "Завершено!";
+            document.getElementById('currentAction').innerText = "Finished!";
             document.getElementById('startBtn').disabled = false;
-            log("✅ ЦИКЛЫ ЗАВЕРШЕНЫ", "text-white font-bold bg-emerald-600 px-3 py-1 rounded w-fit mt-4");
-            alert("Все задачи выполнены успешно!");
+            log("✅ JOB COMPLETE", "text-white font-bold bg-emerald-600 px-3 py-1 rounded w-fit mt-4");
+            alert("All tasks done!");
         }
 
         document.getElementById('connectBtn').onclick = connect;
