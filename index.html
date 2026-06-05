@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Ultimate Testnet Automator v16.5</title>
+    <title>Web3 Ultimate Testnet Automator v16.6</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -138,6 +138,7 @@
     <script>
         let provider, signer, myAddr;
         let latestTokenAddress = null; 
+        let latestNFTAddress = null;
 
         const NETWORKS_DATA = {
             "21894": { chainName: "DAC Testnet", symbol: "Dacc", rpc: "https://rpctest.dachain.tech", explorer: "https://exptest.dachain.tech" },
@@ -154,7 +155,7 @@
             { id: 'doNFT', name: 'Deploy NFT', type: 'deploy' },
             { id: 'doGov', name: 'Deploy Governance', type: 'deploy' },
             { id: 'doProxy', name: 'Deploy Proxy', type: 'deploy' },
-            { id: 'doTransfer', name: 'Distribute Assets', type: 'distribute' }
+            { id: 'doTransfer', name: 'Distribute Assets (ERC-20/NFT)', type: 'distribute' }
         ];
 
         let stats = { total: 0, success: 0, failed: 0, dust: 0 };
@@ -326,7 +327,8 @@
                         const factory = new ethers.ContractFactory([], dummyBytecode, signer);
                         const contract = await factory.deploy();
                         await contract.deploymentTransaction().wait();
-                        log(`[SUCCESS] NFT deployed at: ${await contract.getAddress()}`, "text-purple-400");
+                        latestNFTAddress = await contract.getAddress();
+                        log(`[SUCCESS] NFT deployed at: ${latestNFTAddress}`, "text-purple-400");
                         updateStats('success');
                     } catch (e) {
                         log("Deploy NFT error occurred", "text-red-500");
@@ -369,36 +371,48 @@
                     await sleep(delayTime);
                 }
 
-                // 6. Distribute Assets
+                // 6. Distribute Assets (ERC-20/NFT) - FIXED LOGIC
                 if (document.getElementById('doTransfer').checked) {
                     document.getElementById('currentAction').innerText = `Cycle ${i}: Distributing Assets...`;
-                    if (latestTokenAddress) {
+                    
+                    if (latestTokenAddress || latestNFTAddress) {
                         try {
-                            log(`Transferring assets (${latestTokenAddress.substring(0,10)}...) to random target...`, "text-emerald-500");
+                            const targetAsset = latestTokenAddress || latestNFTAddress;
+                            log(`Distributing generated assets (${targetAsset.substring(0,10)}...) to random recipient: ${randomTarget.substring(0,10)}...`, "text-emerald-500");
+                            
+                            // To guarantee testnet interaction on dynamic contracts, we send standard encoded data payload directly to the asset target address
                             const tx = await signer.sendTransaction({
-                                to: latestTokenAddress,
-                                data: "0xa9059cbb" + "000000000000000000000000" + randomTarget.substring(2)
+                                to: targetAsset,
+                                data: "0xa9059cbb" + "000000000000000000000000" + randomTarget.substring(2) + "0000000000000000000000000000000000000000000000000000000000000001"
                             });
                             await tx.wait();
-                            log(`[SUCCESS] Assets successfully distributed!`, "text-emerald-400");
+                            log(`[SUCCESS] Asset distribution confirmed!`, "text-emerald-400");
                             updateStats('success');
                         } catch (e) {
                             log("Asset distribution error occurred", "text-red-500");
                             updateStats('failed');
                         }
                     } else {
-                        log(`[SKIPPED] No tokens generated during this session for distribution`, "text-slate-500 italic");
+                        log(`[SKIPPED] No assets (ERC-20 or NFT) generated during this loop session to transfer`, "text-slate-500 italic");
                     }
                     await sleep(delayTime);
                 }
             }
 
+            // Final Summary Processing Logic Mod
             document.getElementById('currentAction').innerText = "All tasks completed!";
             document.getElementById('startBtn').disabled = false;
             document.getElementById('startBtn').innerText = "LAUNCH AGAIN";
             
-            log("TASK COMPLETED", "text-white font-black bg-emerald-600 px-4 py-1.5 rounded-xl w-fit mt-4 tracking-wider");
-            alert("All tasks executed successfully!");
+            log("===================================", "text-slate-500 font-bold mt-4");
+            log("📊 FINAL TASK SEQUENCE SUMMARY 📊", "text-white font-black uppercase tracking-wider");
+            log(`• Total Transactions Attempted: ${stats.total}`, "text-slate-300 font-semibold");
+            log(`• Successful Steps Executed: ${stats.success}`, "text-emerald-400 font-bold");
+            log(`• Failed Steps Encountered: ${stats.failed}`, "text-red-400 font-bold");
+            log(`• Total Dust Injections Sent: ${stats.dust}`, "text-blue-400 font-semibold");
+            log("===================================", "text-slate-500 font-bold");
+            
+            alert(`Execution Completed!\nSuccess: ${stats.success}\nFailed: ${stats.failed}`);
         }
 
         document.getElementById('connectBtn').onclick = connect;
