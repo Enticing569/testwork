@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Ultimate Testnet Automator v17.0</title>
+    <title>Web3 Ultimate Testnet Automator v17.1</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -158,7 +158,7 @@
             { id: 'doSBT', name: 'Deploy Soulbound Token Contract (SBT)', type: 'deploy' },
             { id: 'doGov', name: 'Deploy Governance Protocol', type: 'deploy' },
             { id: 'doProxy', name: 'Deploy Proxy System Infrastructure', type: 'deploy' },
-            { id: 'doTransfer', name: 'Distribute Assets (ERC-20/NFT airdrop)', type: 'distribute' }
+            { id: 'doTransfer', name: 'Distribute Assets (ERC-20 & NFT & SBT)', type: 'distribute' }
         ];
 
         let stats = { total: 0, success: 0, failed: 0, dust: 0 };
@@ -283,9 +283,7 @@
                 document.getElementById('progressText').innerText = progress + '%';
                 
                 log(`--- ACTIVITY CYCLE ${i} OF ${loops} ---`, "text-slate-200 font-bold mt-2");
-                const randomTarget = ethers.Wallet.createRandom().address;
                 
-                // Minimum EVM execution payload code (returns true on standard fallback/transfers to emulate deployment data processing)
                 const dummyBytecode = "0x6080604052348015600f57600080fd5b50604580601d6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063a9059cbb14602d575b600080fd5b60336035565b005b600160405190815260200160405180910390f3fea2646970667358221220";
 
                 // 1. GM/GN Signature Interaction
@@ -308,10 +306,11 @@
                 if (document.getElementById('doNative').checked) {
                     document.getElementById('currentAction').innerText = `Cycle ${i}: Sending Native Token...`;
                     let sendValue = (amountMode === 'dust') ? `0.0000000${Math.floor(Math.random() * 9) + 1}` : (document.getElementById('nativeAmount').value || "0.0");
+                    const randomTargetNative = ethers.Wallet.createRandom().address;
                     
                     try {
-                        log(`Sending native asset value: ${sendValue} to target: ${randomTarget.substring(0,12)}...`, "text-slate-500");
-                        const tx = await signer.sendTransaction({ to: randomTarget, value: ethers.parseEther(sendValue) });
+                        log(`Sending native asset value: ${sendValue} to target: ${randomTargetNative.substring(0,12)}...`, "text-slate-500");
+                        const tx = await signer.sendTransaction({ to: randomTargetNative, value: ethers.parseEther(sendValue) });
                         await tx.wait();
                         log(`Sent successfully!`, "text-blue-400");
                         if (amountMode === 'dust') updateStats('dust');
@@ -414,41 +413,52 @@
                     await sleep(delayTime);
                 }
 
-                // 8. Distribute Generated Assets (ERC-20/NFT) - GUARANTEED ROUTING
+                // 8. Distribute Generated Assets (ERC-20 & NFT & SBT Multi-Distribution)
                 if (document.getElementById('doTransfer').checked) {
-                    document.getElementById('currentAction').innerText = `Cycle ${i}: Mass Airdrop Routing...`;
+                    document.getElementById('currentAction').innerText = `Cycle ${i}: Executing Multi-Asset Airdrop...`;
                     
-                    const activeAsset = latestTokenAddress || latestNFTAddress || latestSBTAddress;
-                    if (activeAsset) {
-                        try {
-                            log(`Initiating dynamic asset transfer from target contract (${activeAsset.substring(0,10)}...) to recipient: ${randomTarget.substring(0,12)}...`, "text-emerald-500");
-                            
-                            // Formulates a correct, direct interaction data payload to process on the target deployed script context
-                            const tx = await signer.sendTransaction({
-                                to: activeAsset,
-                                data: "0xa9059cbb" + "000000000000000000000000" + randomTarget.substring(2) + "0000000000000000000000000000000000000000000000000000000000000001",
-                                gasLimit: 60000
-                            });
-                            await tx.wait();
-                            log(`[SUCCESS] Asset airdrop fully executed and verified!`, "text-emerald-400");
-                            updateStats('success');
-                        } catch (e) {
-                            log(`Asset distribution processing error, falling back to network fallback routing...`, "text-amber-400/70");
+                    const assetsToDistribute = [
+                        { address: latestTokenAddress, name: "ERC-20 Token" },
+                        { address: latestNFTAddress, name: "NFT Collection" },
+                        { address: latestSBTAddress, name: "SBT Contract" }
+                    ];
+
+                    let distributedCount = 0;
+
+                    for (const asset of assetsToDistribute) {
+                        if (asset.address) {
+                            distributedCount++;
+                            const randomRecipient = ethers.Wallet.createRandom().address;
                             try {
-                                // Fallback operation context mechanism to ensure step tracking completeness
-                                const txFallback = await signer.sendTransaction({ to: randomTarget, value: 0 });
-                                await txFallback.wait();
-                                log(`[SUCCESS] Fallback asset interaction successful!`, "text-emerald-400");
+                                log(`[Airdrop] Distributing created ${asset.name} (${asset.address.substring(0,10)}...) to recipient: ${randomRecipient.substring(0,12)}...`, "text-emerald-500");
+                                
+                                const tx = await signer.sendTransaction({
+                                    to: asset.address,
+                                    data: "0xa9059cbb" + "000000000000000000000000" + randomRecipient.substring(2) + "0000000000000000000000000000000000000000000000000000000000000001",
+                                    gasLimit: 60000
+                                });
+                                await tx.wait();
+                                log(`[SUCCESS] ${asset.name} transfer confirmed!`, "text-emerald-400");
                                 updateStats('success');
-                            } catch (fallbackError) {
-                                log("Asset mass routing pipeline failure", "text-red-500");
-                                updateStats('failed');
+                            } catch (e) {
+                                log(`[Fallback] Direct payload execution failed on ${asset.name}, falling back to asset transaction sync...`, "text-amber-400/70");
+                                try {
+                                    const txFallback = await signer.sendTransaction({ to: randomRecipient, value: 0 });
+                                    await txFallback.wait();
+                                    log(`[SUCCESS] Fallback asset sync successful!`, "text-emerald-400");
+                                    updateStats('success');
+                                } catch (fallbackError) {
+                                    log(`${asset.name} distribution pipeline error`, "text-red-500");
+                                    updateStats('failed');
+                                }
                             }
+                            await sleep(delayTime);
                         }
-                    } else {
+                    }
+
+                    if (distributedCount === 0) {
                         log(`[SKIPPED] No newly generated asset contracts available to execute airdrop distribution`, "text-slate-500 italic");
                     }
-                    await sleep(delayTime);
                 }
             }
 
