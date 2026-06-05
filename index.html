@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Ultimate Testnet Automator v16.3</title>
+    <title>Web3 Ultimate Testnet Automator v16.4</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -45,7 +45,7 @@
                 <div>
                     <label class="text-[10px] text-slate-500 uppercase font-black tracking-wider block mb-1.5">Target Testnet Network</label>
                     <select id="networkSelect" class="w-full bg-slate-950 border border-slate-800 p-3 rounded-xl text-xs text-white outline-none focus:border-blue-500 transition-all font-semibold">
-                        <option value="2522">DDA Chain Testnet</option>
+                        <option value="21894">DAC Testnet</option>
                         <option value="11155111">Ethereum Sepolia</option>
                         <option value="59141">Linea Sepolia</option>
                         <option value="534351">Scroll Sepolia</option>
@@ -125,8 +125,9 @@
         let provider, signer, myAddr;
         let latestTokenAddress = null; 
 
+        // Correct network specifications map
         const NETWORKS_DATA = {
-            "2522": { chainName: "DDA Chain Testnet", symbol: "DDA", rpc: "https://rpc.testnet.ddachain.com", explorer: "https://explorer.testnet.ddachain.com" },
+            "21894": { chainName: "DAC Testnet", symbol: "Dacc", rpc: "https://rpctest.dachain.tech", explorer: "https://exptest.dachain.tech" },
             "11155111": { chainName: "Ethereum Sepolia", symbol: "ETH", rpc: "https://rpc.sepolia.org", explorer: "https://sepolia.etherscan.io" },
             "59141": { chainName: "Linea Sepolia", symbol: "ETH", rpc: "https://rpc.sepolia.linea.build", explorer: "https://sepolia.lineascan.build" },
             "534351": { chainName: "Scroll Sepolia", symbol: "ETH", rpc: "https://sepolia-rpc.scroll.io", explorer: "https://sepolia.scrollscan.com" },
