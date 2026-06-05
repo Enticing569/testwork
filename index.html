@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Alpha Farmer v29.0</title>
+    <title>Web3 Alpha Farmer v30.0 - Final Build</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -32,10 +32,10 @@
 
         <div class="flex justify-between items-center mb-8 bg-slate-900/40 p-6 rounded-3xl border border-slate-800 shadow-2xl">
             <div>
-                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic text-blue-500">Alpha <span class="text-white">Farmer</span> v29</h1>
+                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic text-blue-500">Alpha <span class="text-white">Farmer</span> v30</h1>
                 <div class="flex items-center gap-2 mt-1">
                     <span id="netIndicator" class="w-2 h-2 rounded-full bg-slate-600"></span>
-                    <p id="walletAddr" class="text-[10px] text-slate-500 font-mono">Wallet not detected</p>
+                    <p id="walletAddr" class="text-[10px] text-slate-500 font-mono italic">Wallet not connected</p>
                 </div>
             </div>
             <button id="connectBtn" onclick="connect()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-500/20">
@@ -45,24 +45,36 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-4 space-y-4">
-                <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
+                <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800 shadow-xl">
                     <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Execution Config</h3>
-                    <div class="space-y-3">
-                        <select id="networkSelect" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none focus:border-blue-500">
-                            <option value="21894">DAC Testnet</option>
-                            <option value="11155111">Sepolia</option>
-                            <option value="59141">Linea</option>
-                        </select>
-                        <div class="relative">
-                            <label class="text-[9px] text-slate-500 absolute -top-2 left-3 bg-[#0f172a] px-1 uppercase">Loops</label>
-                            <input id="txCount" type="number" value="1" min="1" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] text-slate-500 uppercase ml-1 block mb-1">Target Network</label>
+                            <select id="networkSelect" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none focus:border-blue-500">
+                                <option value="21894">DAC Testnet</option>
+                                <option value="11155111">Sepolia</option>
+                                <option value="59141">Linea</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-[10px] text-slate-500 uppercase ml-1 block mb-1">Amount Mode</label>
+                                <select id="valueMode" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none">
+                                    <option value="dust">Strict Dust</option>
+                                    <option value="manual">Manual</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-500 uppercase ml-1 block mb-1">Loops (Qty)</label>
+                                <input id="txCount" type="number" value="1" min="1" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800">
+                <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800 shadow-xl">
                     <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Diversity Modules</h3>
-                    <div id="moduleList" class="space-y-2">
+                    <div id="moduleList" class="space-y-2 text-xs">
                         </div>
                 </div>
             </div>
@@ -72,8 +84,8 @@
                     Run Smart Sequence
                 </button>
                 <div class="bg-black/40 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
-                    <div id="log" class="p-6 h-[500px] overflow-y-auto font-mono text-[11px] leading-relaxed space-y-2">
-                        <div class="text-slate-600 italic">> System ready. Connect wallet to start.</div>
+                    <div id="log" class="p-6 h-[540px] overflow-y-auto font-mono text-[11px] leading-relaxed space-y-2">
+                        <div class="text-slate-600 italic">> Diversity System V30. Token distribution active.</div>
                     </div>
                 </div>
             </div>
@@ -83,6 +95,7 @@
     <script>
         let provider, signer, myAddr;
         let stats = { total: 0, success: 0, failed: 0, dust: 0 };
+        let latestTokenAddress = null;
 
         const modules = [
             { id: 'doNative', name: 'Native Transfer (Dust)', color: 'blue' },
@@ -92,18 +105,17 @@
             { id: 'doNFT', name: 'Deploy ERC-721', color: 'purple' },
             { id: 'doERC1155', name: 'Deploy ERC-1155', color: 'fuchsia' },
             { id: 'doGov', name: 'Deploy Governance', color: 'emerald' },
-            { id: 'doProxy', name: 'Deploy Proxy', color: 'cyan' }
+            { id: 'doProxy', name: 'Deploy Proxy', color: 'cyan' },
+            { id: 'doTransferToken', name: 'Send Tokens to Random Addr', color: 'pink' }
         ];
 
-        // Render Checkboxes
         const moduleContainer = document.getElementById('moduleList');
         modules.forEach(m => {
             moduleContainer.innerHTML += `
                 <label class="flex items-center justify-between p-2.5 bg-slate-800/30 rounded-xl border border-transparent hover:border-${m.color}-500 cursor-pointer transition-all">
-                    <span class="text-[11px] font-bold uppercase">${m.name}</span>
+                    <span class="font-bold uppercase tracking-tight">${m.name}</span>
                     <input type="checkbox" id="${m.id}" checked class="w-4 h-4 accent-${m.color}-500">
-                </label>
-            `;
+                </label>`;
         });
 
         function updateStats(type) {
@@ -124,40 +136,32 @@
         }
 
         async function connect() {
-            if (!window.ethereum) return alert("MetaMask not found!");
+            if (!window.ethereum) return alert("Install MetaMask!");
             try {
                 provider = new ethers.BrowserProvider(window.ethereum);
                 signer = await provider.getSigner();
                 myAddr = await signer.getAddress();
                 
-                // UI Update: Button & Status
                 const btn = document.getElementById('connectBtn');
                 btn.innerText = "Connected";
                 btn.classList.replace('bg-blue-600', 'bg-slate-700');
                 btn.classList.add('cursor-not-allowed', 'opacity-70');
-                btn.onclick = null; // Отключаем повторный клик
+                btn.disabled = true;
 
-                document.getElementById('walletAddr').innerText = `${myAddr.substring(0,6)}...${myAddr.substring(38)}`;
+                document.getElementById('walletAddr').innerText = `Active: ${myAddr}`;
                 document.getElementById('netIndicator').classList.replace('bg-slate-600', 'bg-emerald-500');
-                
-                log("WALLET CONNECTED SUCCESSFULLY", "text-emerald-400 font-bold");
-            } catch (err) {
-                log("CONNECTION FAILED", "text-red-500");
-            }
+                log("WALLET CONNECTED: " + myAddr, "text-emerald-400 font-bold");
+            } catch (err) { log("CONNECTION FAILED", "text-red-500"); }
         }
 
         async function startMachine() {
-            if (!signer) {
-                log("ERROR: Connect wallet first!", "text-red-400");
-                return;
-            }
+            if (!signer) return log("ERROR: Connect wallet first!", "text-red-400");
             
             const loops = parseInt(document.getElementById('txCount').value) || 1;
-            // Reset local session stats
             stats = { total: 0, success: 0, failed: 0, dust: 0 };
             
             for (let i = 1; i <= loops; i++) {
-                log(`CYCLE ${i}/${loops} STARTED`, "text-white bg-blue-600/30 p-1 px-2 rounded-lg font-bold");
+                log(`CYCLE ${i}/${loops} STARTED`, "text-white bg-blue-600/30 p-1 px-2 rounded font-bold");
                 
                 for (let m of modules) {
                     if (document.getElementById(m.id).checked) {
@@ -169,26 +173,36 @@
                                 updateStats('dust');
                             } else if (m.id === 'doGM' || m.id === 'doGN') {
                                 tx = await signer.sendTransaction({ to: myAddr, data: ethers.hexlify(ethers.toUtf8Bytes(m.name)) });
+                            } else if (m.id === 'doTransferToken') {
+                                // Имитация перевода (или реальный перевод, если есть токен)
+                                if (latestTokenAddress) {
+                                    const abi = ["function transfer(address to, uint256 amount) returns (bool)"];
+                                    const contract = new ethers.Contract(latestTokenAddress, abi, signer);
+                                    tx = await contract.transfer(ethers.Wallet.createRandom().address, ethers.parseUnits("1", 18));
+                                } else {
+                                    log(`SKIP: No token deployed in this session yet`, "text-slate-500");
+                                    continue;
+                                }
                             } else {
-                                // Light Deployment Bytecode (Simple Contract)
                                 const factory = new ethers.ContractFactory([], "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea2646970667358221220", signer);
                                 const contract = await factory.deploy();
                                 tx = contract.deploymentTransaction();
+                                latestTokenAddress = await contract.getAddress(); // Запоминаем для перевода
                             }
                             
-                            log(`PENDING: ${m.name}...`, `text-slate-400`);
-                            const receipt = await tx.wait();
-                            log(`SUCCESS: ${m.name}`, "text-emerald-500 font-bold");
+                            log(`WAITING: ${m.name}...`, "text-slate-500");
+                            await tx.wait();
+                            log(`OK: ${m.name}`, "text-emerald-500 font-bold");
                             updateStats('success');
                         } catch (e) {
-                            log(`ERROR: ${m.name} rejected or failed`, "text-red-500");
+                            log(`FAIL: ${m.name}`, "text-red-500");
                             updateStats('failed');
                         }
                     }
                 }
             }
-            log("--- SEQUENCE COMPLETED ---", "text-blue-400 font-black italic");
-            alert(`Execution finished!\nSuccess: ${stats.success}\nFailed: ${stats.failed}`);
+            log("--- ALL CYCLES COMPLETED ---", "text-blue-400 font-black italic");
+            alert(`Execution finished!\nSuccessful: ${stats.success}\nFailed: ${stats.failed}`);
         }
     </script>
 </body>
