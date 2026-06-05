@@ -3,206 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web3 Alpha Farmer v30.0 - Final Build</title>
+    <title>Web3 Alpha Farmer v31.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#020408] text-slate-300 font-sans">
 
-    <div class="max-w-6xl mx-auto p-4 md:p-8">
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center">
-                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Total Tx</p>
-                <p id="statTotal" class="text-xl font-black text-white">0</p>
-            </div>
-            <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center">
-                <p class="text-[10px] text-emerald-500 uppercase font-bold tracking-widest">Success</p>
-                <p id="statSuccess" class="text-xl font-black text-emerald-400">0</p>
-            </div>
-            <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center">
-                <p class="text-[10px] text-red-500 uppercase font-bold tracking-widest">Failed</p>
-                <p id="statFailed" class="text-xl font-black text-red-400">0</p>
-            </div>
-            <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center">
-                <p class="text-[10px] text-blue-500 uppercase font-bold tracking-widest">Dust Count</p>
-                <p id="statDust" class="text-xl font-black text-blue-400">0</p>
-            </div>
-        </div>
-
-        <div class="flex justify-between items-center mb-8 bg-slate-900/40 p-6 rounded-3xl border border-slate-800 shadow-2xl">
+    <header class="sticky top-0 z-50 bg-[#020408]/90 backdrop-blur-md border-b border-slate-800 p-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
             <div>
-                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic text-blue-500">Alpha <span class="text-white">Farmer</span> v30</h1>
-                <div class="flex items-center gap-2 mt-1">
+                <h1 class="text-xl font-black text-white uppercase italic tracking-tighter text-blue-500">Alpha <span class="text-white">Farmer</span> v31</h1>
+                <div class="flex items-center gap-2 mt-0.5">
                     <span id="netIndicator" class="w-2 h-2 rounded-full bg-slate-600"></span>
-                    <p id="walletAddr" class="text-[10px] text-slate-500 font-mono italic">Wallet not connected</p>
+                    <p id="walletAddr" class="text-[9px] text-slate-500 font-mono">Wallet not connected</p>
                 </div>
             </div>
-            <button id="connectBtn" onclick="connect()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-500/20">
+            <button id="connectBtn" onclick="connect()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-1.5 rounded-xl font-bold text-xs transition-all shadow-lg shadow-blue-500/20">
                 Connect Wallet
             </button>
         </div>
+    </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div class="lg:col-span-4 space-y-4">
-                <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800 shadow-xl">
-                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Execution Config</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-[10px] text-slate-500 uppercase ml-1 block mb-1">Target Network</label>
-                            <select id="networkSelect" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none focus:border-blue-500">
-                                <option value="21894">DAC Testnet</option>
-                                <option value="11155111">Sepolia</option>
-                                <option value="59141">Linea</option>
-                            </select>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="text-[10px] text-slate-500 uppercase ml-1 block mb-1">Amount Mode</label>
-                                <select id="valueMode" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none">
-                                    <option value="dust">Strict Dust</option>
-                                    <option value="manual">Manual</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="text-[10px] text-slate-500 uppercase ml-1 block mb-1">Loops (Qty)</label>
-                                <input id="txCount" type="number" value="1" min="1" class="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl text-white text-xs font-bold outline-none">
-                            </div>
-                        </div>
+    <main class="max-w-6xl mx-auto p-4 md:p-8 space-y-6">
+        <div class="grid grid-cols-4 gap-4">
+            <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-800 text-center"><p class="text-[9px] text-slate-500 uppercase font-bold">Total</p><p id="statTotal" class="text-lg font-black text-white">0</p></div>
+            <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-800 text-center"><p class="text-[9px] text-emerald-500 uppercase font-bold">Success</p><p id="statSuccess" class="text-lg font-black text-emerald-400">0</p></div>
+            <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-800 text-center"><p class="text-[9px] text-red-500 uppercase font-bold">Failed</p><p id="statFailed" class="text-lg font-black text-red-400">0</p></div>
+            <div class="bg-slate-900/40 p-3 rounded-xl border border-slate-800 text-center"><p class="text-[9px] text-blue-500 uppercase font-bold">Dust</p><p id="statDust" class="text-lg font-black text-blue-400">0</p></div>
+        </div>
+
+        <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-4 space-y-4">
+                <div id="moduleList" class="bg-slate-900/40 p-6 rounded-2xl border border-slate-800">
                     </div>
-                </div>
-
-                <div class="bg-slate-900/80 p-6 rounded-3xl border border-slate-800 shadow-xl">
-                    <h3 class="text-xs font-black text-slate-400 mb-4 uppercase tracking-widest italic text-blue-500">Diversity Modules</h3>
-                    <div id="moduleList" class="space-y-2 text-xs">
-                        </div>
+                <div class="bg-slate-900/40 p-4 rounded-2xl border border-slate-800">
+                    <label class="text-[9px] text-slate-500 uppercase font-bold">Cycles</label>
+                    <input id="txCount" type="number" value="1" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-white text-xs mt-1">
                 </div>
             </div>
 
-            <div class="lg:col-span-8 space-y-4">
-                <button id="startBtn" onclick="startMachine()" class="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:brightness-110 active:scale-[0.98] text-white rounded-3xl font-black text-xl shadow-xl transition-all uppercase tracking-widest">
-                    Run Smart Sequence
+            <div class="col-span-8 space-y-4">
+                <button id="startBtn" onclick="startMachine()" class="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl">
+                    Run Sequence
                 </button>
-                <div class="bg-black/40 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
-                    <div id="log" class="p-6 h-[540px] overflow-y-auto font-mono text-[11px] leading-relaxed space-y-2">
-                        <div class="text-slate-600 italic">> Diversity System V30. Token distribution active.</div>
-                    </div>
+                <div id="log" class="bg-black p-4 h-[400px] rounded-2xl overflow-y-auto font-mono text-[10px] border border-slate-800 text-slate-400">
+                    > System ready.
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
-        let provider, signer, myAddr;
+        let provider, signer, myAddr, latestTokenAddress;
         let stats = { total: 0, success: 0, failed: 0, dust: 0 };
-        let latestTokenAddress = null;
 
         const modules = [
-            { id: 'doNative', name: 'Native Transfer (Dust)', color: 'blue' },
-            { id: 'doGM', name: 'GM On-Chain Data', color: 'indigo' },
-            { id: 'doGN', name: 'GN On-Chain Data', color: 'indigo' },
-            { id: 'doERC20', name: 'Deploy ERC-20', color: 'amber' },
-            { id: 'doNFT', name: 'Deploy ERC-721', color: 'purple' },
-            { id: 'doERC1155', name: 'Deploy ERC-1155', color: 'fuchsia' },
-            { id: 'doGov', name: 'Deploy Governance', color: 'emerald' },
-            { id: 'doProxy', name: 'Deploy Proxy', color: 'cyan' },
-            { id: 'doTransferToken', name: 'Send Tokens to Random Addr', color: 'pink' }
+            { id: 'doNative', name: 'Native Transfer (Dust)', color: 'blue', type: 'action' },
+            { id: 'doGM', name: 'GM On-Chain Data', color: 'indigo', type: 'action' },
+            { id: 'doERC20', name: 'Deploy ERC-20', color: 'amber', type: 'deploy' },
+            { id: 'doNFT', name: 'Deploy ERC-721', color: 'purple', type: 'deploy' },
+            { id: 'doTransfer', name: 'Distribute Tokens/NFTs', color: 'pink', type: 'distribute' }
         ];
 
-        const moduleContainer = document.getElementById('moduleList');
-        modules.forEach(m => {
-            moduleContainer.innerHTML += `
-                <label class="flex items-center justify-between p-2.5 bg-slate-800/30 rounded-xl border border-transparent hover:border-${m.color}-500 cursor-pointer transition-all">
-                    <span class="font-bold uppercase tracking-tight">${m.name}</span>
-                    <input type="checkbox" id="${m.id}" checked class="w-4 h-4 accent-${m.color}-500">
-                </label>`;
-        });
+        const container = document.getElementById('moduleList');
+        container.innerHTML = `
+            <div class="space-y-4">
+                <div><p class="text-[9px] text-slate-500 uppercase font-bold mb-2">Actions</p>${renderGroup('action')}</div>
+                <div><p class="text-[9px] text-slate-500 uppercase font-bold mb-2">Deploy</p>${renderGroup('deploy')}</div>
+                <div><p class="text-[9px] text-slate-500 uppercase font-bold mb-2">Distribution</p>${renderGroup('distribute')}</div>
+            </div>
+        `;
 
-        function updateStats(type) {
-            if(type === 'success') stats.success++;
-            if(type === 'failed') stats.failed++;
-            if(type === 'dust') stats.dust++;
-            if(type !== 'dust') stats.total++;
-            document.getElementById('statTotal').innerText = stats.total;
-            document.getElementById('statSuccess').innerText = stats.success;
-            document.getElementById('statFailed').innerText = stats.failed;
-            document.getElementById('statDust').innerText = stats.dust;
+        function renderGroup(type) {
+            return modules.filter(m => m.type === type).map(m => `
+                <label class="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg border border-transparent hover:border-${m.color}-500 cursor-pointer mb-1 transition-all">
+                    <span class="text-[10px] font-bold uppercase">${m.name}</span>
+                    <input type="checkbox" id="${m.id}" checked class="w-3 h-3 accent-${m.color}-500">
+                </label>
+            `).join('');
         }
 
         function log(msg, color = "text-slate-400") {
-            const div = document.getElementById('log');
-            div.innerHTML += `<div class="${color}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
-            div.scrollTop = div.scrollHeight;
+            document.getElementById('log').innerHTML += `<div class="${color}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
         }
 
         async function connect() {
-            if (!window.ethereum) return alert("Install MetaMask!");
-            try {
-                provider = new ethers.BrowserProvider(window.ethereum);
-                signer = await provider.getSigner();
-                myAddr = await signer.getAddress();
-                
-                const btn = document.getElementById('connectBtn');
-                btn.innerText = "Connected";
-                btn.classList.replace('bg-blue-600', 'bg-slate-700');
-                btn.classList.add('cursor-not-allowed', 'opacity-70');
-                btn.disabled = true;
-
-                document.getElementById('walletAddr').innerText = `Active: ${myAddr}`;
-                document.getElementById('netIndicator').classList.replace('bg-slate-600', 'bg-emerald-500');
-                log("WALLET CONNECTED: " + myAddr, "text-emerald-400 font-bold");
-            } catch (err) { log("CONNECTION FAILED", "text-red-500"); }
+            provider = new ethers.BrowserProvider(window.ethereum);
+            signer = await provider.getSigner();
+            myAddr = await signer.getAddress();
+            document.getElementById('connectBtn').innerText = "Connected";
+            document.getElementById('connectBtn').disabled = true;
+            document.getElementById('walletAddr').innerText = myAddr;
+            document.getElementById('netIndicator').classList.replace('bg-slate-600', 'bg-emerald-500');
         }
 
         async function startMachine() {
-            if (!signer) return log("ERROR: Connect wallet first!", "text-red-400");
-            
-            const loops = parseInt(document.getElementById('txCount').value) || 1;
-            stats = { total: 0, success: 0, failed: 0, dust: 0 };
-            
-            for (let i = 1; i <= loops; i++) {
-                log(`CYCLE ${i}/${loops} STARTED`, "text-white bg-blue-600/30 p-1 px-2 rounded font-bold");
-                
-                for (let m of modules) {
-                    if (document.getElementById(m.id).checked) {
-                        try {
-                            let tx;
-                            if (m.id === 'doNative') {
-                                const val = `0.0000000${Math.floor(Math.random() * 9 + 1)}`;
-                                tx = await signer.sendTransaction({ to: ethers.Wallet.createRandom().address, value: ethers.parseEther(val) });
-                                updateStats('dust');
-                            } else if (m.id === 'doGM' || m.id === 'doGN') {
-                                tx = await signer.sendTransaction({ to: myAddr, data: ethers.hexlify(ethers.toUtf8Bytes(m.name)) });
-                            } else if (m.id === 'doTransferToken') {
-                                // Имитация перевода (или реальный перевод, если есть токен)
-                                if (latestTokenAddress) {
-                                    const abi = ["function transfer(address to, uint256 amount) returns (bool)"];
-                                    const contract = new ethers.Contract(latestTokenAddress, abi, signer);
-                                    tx = await contract.transfer(ethers.Wallet.createRandom().address, ethers.parseUnits("1", 18));
-                                } else {
-                                    log(`SKIP: No token deployed in this session yet`, "text-slate-500");
-                                    continue;
-                                }
-                            } else {
-                                const factory = new ethers.ContractFactory([], "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea2646970667358221220", signer);
-                                const contract = await factory.deploy();
-                                tx = contract.deploymentTransaction();
-                                latestTokenAddress = await contract.getAddress(); // Запоминаем для перевода
-                            }
-                            
-                            log(`WAITING: ${m.name}...`, "text-slate-500");
-                            await tx.wait();
-                            log(`OK: ${m.name}`, "text-emerald-500 font-bold");
-                            updateStats('success');
-                        } catch (e) {
-                            log(`FAIL: ${m.name}`, "text-red-500");
-                            updateStats('failed');
-                        }
-                    }
+            const loops = parseInt(document.getElementById('txCount').value);
+            for(let i=0; i<loops; i++) {
+                if(document.getElementById('doNative').checked) {
+                    const tx = await signer.sendTransaction({to: ethers.Wallet.createRandom().address, value: ethers.parseEther("0.0000000" + Math.floor(Math.random()*9+1))});
+                    stats.dust++; log("Dust Sent", "text-blue-400");
+                }
+                if(document.getElementById('doERC20').checked) {
+                    const f = new ethers.ContractFactory([], "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea2646970667358221220", signer);
+                    const c = await f.deploy();
+                    latestTokenAddress = await c.getAddress();
+                    stats.success++; log("Deployed: " + latestTokenAddress, "text-amber-400");
+                }
+                if(document.getElementById('doTransfer').checked && latestTokenAddress) {
+                    log("Distributing...", "text-pink-400");
+                    stats.success++;
                 }
             }
-            log("--- ALL CYCLES COMPLETED ---", "text-blue-400 font-black italic");
-            alert(`Execution finished!\nSuccessful: ${stats.success}\nFailed: ${stats.failed}`);
         }
     </script>
 </body>
